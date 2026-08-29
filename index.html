@@ -1,145 +1,1309 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Smart Home</title>
+    <title>Smart Home Dashboard</title>
 
     <!-- MQTT.js -->
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
+
     <style>
+
+        /* =====================================================
+           GLOBAL
+           ===================================================== */
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+
+            --bg: #f5f7fb;
+            --card: #ffffff;
+
+            --text: #111827;
+            --muted: #6b7280;
+
+            --border: #e5e7eb;
+
+            --shadow:
+                0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f2f4f7;
-            color: #222;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(180deg, #eef4ff 0%, #f8fafc 100%);
+
+            color: var(--text);
+
+            min-height: 100vh;
+
         }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 25px;
+
+        button,
+        input {
+            font-family: inherit;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 5px;
-        }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-        }
+        /* =====================================================
+           LOGIN
+           ===================================================== */
 
-        .status {
-            text-align: center;
-            padding: 12px;
-            border-radius: 10px;
-            background: #eee;
-            margin-bottom: 20px;
-        }
+        .login-page {
 
-        .device {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
+            min-height: 100vh;
 
             display: flex;
+
             align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(99,102,241,0.18),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    rgba(14,165,233,0.16),
+                    transparent 30%
+                ),
+                linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+
+        }
+
+
+        .login-card {
+
+            width: 100%;
+
+            max-width: 430px;
+
+            background: rgba(255,255,255,0.9);
+
+            border: 1px solid rgba(148,163,184,0.18);
+
+            border-radius: 28px;
+
+            padding: 40px 32px 30px;
+
+            box-shadow:
+                0 24px 60px rgba(15,23,42,0.12);
+
+            backdrop-filter: blur(8px);
+
+            position: relative;
+
+            overflow: hidden;
+
+            animation: loginAppear 0.5s ease;
+
+        }
+
+
+        .login-card::before {
+
+            content: "";
+            position: absolute;
+            inset: 0 auto auto 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6, #22c55e);
+
+        }
+
+
+        @keyframes loginAppear {
+
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        .login-logo {
+
+            width: 78px;
+
+            height: 78px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 38px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    var(--primary),
+                    #8b5cf6
+                );
+
+            box-shadow:
+                0 12px 28px rgba(79,70,229,0.28);
+
+        }
+
+
+        .login-title {
+
+            text-align: center;
+
+            font-size: 30px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.7px;
+
+        }
+
+
+        .login-subtitle {
+
+            text-align: center;
+
+            color: var(--muted);
+
+            margin-top: 8px;
+
+            margin-bottom: 30px;
+
+            font-size: 14px;
+
+        }
+
+
+        .input-group {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .input-group label {
+
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+
+            color: #374151;
+
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 14px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            font-size: 17px;
+
+            opacity: 0.6;
+
+        }
+
+
+        .input-group input {
+
+            width: 100%;
+
+            height: 52px;
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 0 16px 0 46px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .input-group input:focus {
+
+            border-color: rgba(99,102,241,0.5);
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(99,102,241,0.08);
+
+        }
+
+
+        .login-error {
+
+            display: none;
+
+            padding: 11px 14px;
+
+            margin-bottom: 18px;
+
+            border-radius: 10px;
+
+            background: #fef2f2;
+
+            color: #b91c1c;
+
+            font-size: 13px;
+
+            text-align: center;
+
+        }
+
+
+        .login-button {
+
+            width: 100%;
+
+            height: 52px;
+
+            border: none;
+
+            border-radius: 14px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary-dark)
+                );
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 24px rgba(79,70,229,0.26);
+
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        }
+
+
+        .login-button:hover {
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 15px 28px rgba(79,70,229,0.32);
+
+        }
+
+
+        .login-button:active {
+
+            transform: translateY(0);
+
+        }
+
+
+        .login-footer {
+
+            text-align: center;
+
+            margin-top: 24px;
+
+            font-size: 12px;
+
+            color: #9ca3af;
+
+            letter-spacing: 0.06em;
+
+            text-transform: uppercase;
+
+        }
+
+
+        /* =====================================================
+           DASHBOARD
+           ===================================================== */
+
+        .dashboard {
+
+            display: none;
+
+            min-height: 100vh;
+
+        }
+
+
+        .dashboard.active {
+
+            display: block;
+
+            animation: dashboardAppear 0.4s ease;
+
+        }
+
+
+        @keyframes dashboardAppear {
+
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .header {
+
+            height: 76px;
+
+            background: rgba(255,255,255,0.8);
+
+            border-bottom: 1px solid rgba(148,163,184,0.2);
+
+            backdrop-filter: blur(12px);
+
+            display: flex;
+
+            align-items: center;
+
             justify-content: space-between;
 
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            padding: 0 30px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 10;
+
         }
 
-        .device-info {
+
+        .brand {
+
             display: flex;
+
             align-items: center;
-            gap: 15px;
+
+            gap: 12px;
+
         }
 
-        .icon {
-            font-size: 35px;
+
+        .brand-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #8b5cf6
+                );
+
+            box-shadow: 0 10px 24px rgba(99,102,241,0.25);
+
         }
+
+
+        .brand-text h2 {
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+        }
+
+
+        .brand-text span {
+
+            display: block;
+
+            font-size: 11px;
+
+            color: var(--muted);
+
+            margin-top: 2px;
+
+        }
+
+
+        .header-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+        }
+
+
+        .connection {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 12px;
+
+            border-radius: 20px;
+
+            background: #f0fdf4;
+
+            color: #15803d;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            border: 1px solid rgba(34,197,94,0.12);
+
+        }
+
+
+        .connection-dot {
+
+            width: 8px;
+
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: var(--success);
+
+            box-shadow:
+                0 0 0 4px rgba(34,197,94,0.12);
+
+        }
+
+
+        .logout {
+
+            border: none;
+
+            background: #f3f4f6;
+
+            color: #374151;
+
+            padding: 9px 14px;
+
+            border-radius: 10px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+
+        .logout:hover {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+
+        }
+
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
+
+        .main {
+
+            max-width: 1180px;
+
+            margin: auto;
+
+            padding: 40px 25px 60px;
+
+        }
+
+
+        .welcome {
+
+            margin-bottom: 28px;
+
+        }
+
+
+        .welcome h1 {
+
+            font-size: 34px;
+
+            letter-spacing: -0.8px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .welcome p {
+
+            color: var(--muted);
+
+            font-size: 15px;
+
+        }
+
+
+        .overview-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .metric-card {
+
+            background: rgba(255,255,255,0.85);
+
+            border: 1px solid var(--border);
+
+            border-radius: 20px;
+
+            padding: 20px 22px;
+
+            box-shadow: var(--shadow);
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        .metric-card::before {
+
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+
+        }
+
+
+        .metric-label {
+
+            font-size: 12px;
+
+            color: var(--muted);
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.08em;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .metric-value {
+
+            font-size: 32px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.7px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .metric-chip {
+
+            display: inline-block;
+
+            padding: 7px 10px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+        }
+
+
+        .metric-chip.success {
+
+            background: #dcfce7;
+
+            color: #15803d;
+
+        }
+
+
+        .metric-chip.warning {
+
+            background: #fff7ed;
+
+            color: #c2410c;
+
+        }
+
+
+        .metric-chip.primary {
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+        }
+
+
+        /* =====================================================
+           STATUS CARD
+           ===================================================== */
+
+        .status-card {
+
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,250,252,0.95));
+
+            border: 1px solid var(--border);
+
+            border-radius: 22px;
+
+            padding: 20px 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 35px;
+
+            box-shadow: var(--shadow);
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+
+        .status-card::after {
+
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--success), #22c55e);
+
+        }
+
+
+        .status-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+        }
+
+
+        .status-icon {
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #f0fdf4;
+
+            font-size: 21px;
+
+        }
+
+
+        .status-title {
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+        }
+
+
+        .status-description {
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            margin-top: 3px;
+
+        }
+
+
+        .status-badge {
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            background: #f0fdf4;
+
+            color: #15803d;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =====================================================
+           SECTION
+           ===================================================== */
+
+        .section-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .section-title {
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+        }
+
+
+        .section-count {
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           DEVICES
+           ===================================================== */
+
+        .devices {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 18px;
+
+        }
+
+
+        .device {
+
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
+
+            border: 1px solid var(--border);
+
+            border-radius: 22px;
+
+            padding: 24px;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+
+        }
+
+
+        .device:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 15px 35px rgba(15,23,42,0.10);
+
+        }
+
+
+        .device.on {
+
+            border-color: rgba(34,197,94,0.2);
+
+            box-shadow: 0 18px 33px rgba(34,197,94,0.08);
+
+        }
+
+
+        .device-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .device-icon {
+
+            width: 56px;
+
+            height: 56px;
+
+            border-radius: 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 27px;
+
+            background: linear-gradient(135deg, #eef2ff, #f3f4f6);
+
+            transition: 0.3s;
+
+        }
+
+
+        .device.on .device-icon {
+
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+
+            box-shadow:
+                0 0 0 6px rgba(245,158,11,0.08);
+
+        }
+
+
+        .device-status {
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            color: #9ca3af;
+
+            padding: 5px 9px;
+
+            background: #f3f4f6;
+
+            border-radius: 15px;
+
+        }
+
+
+        .device.on .device-status {
+
+            background: #dcfce7;
+
+            color: #15803d;
+
+        }
+
 
         .device-name {
+
             font-size: 18px;
-            font-weight: bold;
+
+            font-weight: 800;
+
+            margin-bottom: 5px;
+
         }
 
-        .state {
+
+        .device-description {
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+        }
+
+
+        .device-bottom {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-top: 25px;
+
+            padding-top: 18px;
+
+            border-top: 1px solid #f0f0f0;
+
+        }
+
+
+        .device-state {
+
             font-size: 13px;
-            color: #777;
-            margin-top: 4px;
+
+            color: var(--muted);
+
         }
 
-        /* Toggle */
+
+        .device.on .device-state {
+
+            color: #16a34a;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =====================================================
+           MODERN TOGGLE
+           ===================================================== */
 
         .switch {
+
             position: relative;
-            width: 55px;
-            height: 30px;
+
+            width: 58px;
+
+            height: 32px;
+
+            flex-shrink: 0;
+
         }
+
 
         .switch input {
-            display: none;
+
+            opacity: 0;
+
+            width: 0;
+
+            height: 0;
+
         }
 
+
         .slider {
+
             position: absolute;
-            cursor: pointer;
 
             inset: 0;
 
-            background: #ccc;
+            cursor: pointer;
 
-            border-radius: 30px;
+            background: #d1d5db;
+
+            border-radius: 50px;
 
             transition: 0.3s;
+
         }
 
-        .slider:before {
+
+        .slider::before {
+
             content: "";
 
             position: absolute;
 
-            width: 24px;
-            height: 24px;
+            width: 26px;
+
+            height: 26px;
 
             left: 3px;
+
             top: 3px;
 
             background: white;
 
             border-radius: 50%;
 
+            box-shadow:
+                0 2px 5px rgba(0,0,0,0.15);
+
             transition: 0.3s;
+
         }
 
-        input:checked + .slider {
-            background: #22c55e;
+
+        .switch input:checked + .slider {
+
+            background: var(--success);
+
         }
 
-        input:checked + .slider:before {
-            transform: translateX(25px);
+
+        .switch input:checked + .slider::before {
+
+            transform: translateX(26px);
+
         }
 
-        .section-title {
-            margin-top: 25px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            color: #777;
-            text-transform: uppercase;
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 45px;
+
+            color: #9ca3af;
+
+            font-size: 11px;
+
+        }
+
+
+        /* =====================================================
+           HIDDEN
+           ===================================================== */
+
+        .hidden {
+
+            display: none !important;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .header {
+
+                padding: 0 16px;
+
+                height: 68px;
+
+            }
+
+
+            .brand-text span {
+
+                display: none;
+
+            }
+
+
+            .connection {
+
+                padding: 7px 9px;
+
+            }
+
+
+            .connection-text {
+
+                display: none;
+
+            }
+
+
+            .logout {
+
+                padding: 8px 10px;
+
+            }
+
+
+            .main {
+
+                padding:
+                    28px 16px 45px;
+
+            }
+
+
+            .welcome h1 {
+
+                font-size: 25px;
+
+            }
+
+
+            .overview-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .status-card {
+
+                padding: 16px;
+
+            }
+
+
+            .devices {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .login-card {
+
+                padding: 30px 22px;
+
+                border-radius: 20px;
+
+            }
+
+        }
+
+
+        @media (max-width: 380px) {
+
+            .brand-text {
+
+                display: none;
+
+            }
+
+            .status-description {
+
+                font-size: 11px;
+
+            }
+
         }
 
     </style>
@@ -149,222 +1313,835 @@
 
 <body>
 
-<div class="container">
 
-    <h1>🏠 Smart Home</h1>
+<!-- =========================================================
+     LOGIN PAGE
+     ========================================================= -->
 
-    <div class="subtitle">
-        ESP32 Control Panel
-    </div>
+<div id="loginPage" class="login-page">
 
+    <div class="login-card">
 
-    <div id="connectionStatus" class="status">
-        🔴 Connecting...
-    </div>
-
-
-    <div class="section-title">
-        Lights
-    </div>
-
-
-    <!-- LIGHT 1 -->
-
-    <div class="device">
-
-        <div class="device-info">
-
-            <div class="icon">
-                💡
-            </div>
-
-            <div>
-
-                <div class="device-name">
-                    Light 1
-                </div>
-
-                <div class="state" id="light1State">
-                    OFF
-                </div>
-
-            </div>
-
+        <div class="login-logo">
+            🏠
         </div>
 
 
-        <label class="switch">
-
-            <input
-                type="checkbox"
-                id="light1"
-                onchange="toggleLight(1)"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-
-    <!-- LIGHT 2 -->
-
-    <div class="device">
-
-        <div class="device-info">
-
-            <div class="icon">
-                💡
-            </div>
-
-            <div>
-
-                <div class="device-name">
-                    Light 2
-                </div>
-
-                <div class="state" id="light2State">
-                    OFF
-                </div>
-
-            </div>
-
+        <div class="login-title">
+            Smart Home
         </div>
 
 
-        <label class="switch">
+        <div class="login-subtitle">
+            Sign in to access your home controls
+        </div>
 
-            <input
-                type="checkbox"
-                id="light2"
-                onchange="toggleLight(2)"
+
+        <div
+            id="loginError"
+            class="login-error"
+        >
+            Invalid username or password
+        </div>
+
+
+        <form onsubmit="login(event)">
+
+            <div class="input-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        👤
+                    </span>
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        🔒
+                    </span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
             >
+                Sign In
+            </button>
 
-            <span class="slider"></span>
+        </form>
 
-        </label>
+
+        <div class="login-footer">
+            Smart Home Control System
+        </div>
 
     </div>
 
 </div>
 
 
+
+<!-- =========================================================
+     DASHBOARD
+     ========================================================= -->
+
+<div id="dashboard" class="dashboard">
+
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🏠
+            </div>
+
+            <div class="brand-text">
+
+                <h2>
+                    Smart Home
+                </h2>
+
+                <span>
+                    ESP32 Control System
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <div
+                id="connection"
+                class="connection"
+            >
+
+                <span
+                    id="connectionDot"
+                    class="connection-dot"
+                ></span>
+
+                <span
+                    id="connectionText"
+                    class="connection-text"
+                >
+                    Connected
+                </span>
+
+            </div>
+
+
+            <button
+                class="logout"
+                onclick="logout()"
+            >
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            <h1>
+                Welcome back 👋
+            </h1>
+
+            <p>
+                Control and monitor your smart devices.
+            </p>
+
+        </div>
+
+
+
+        <div class="overview-grid">
+
+            <div class="metric-card">
+
+                <div class="metric-label">
+                    Active Rooms
+                </div>
+
+                <div class="metric-value">
+                    04
+                </div>
+
+                <div class="metric-chip success">
+                    +2 from yesterday
+                </div>
+
+            </div>
+
+            <div class="metric-card">
+
+                <div class="metric-label">
+                    Energy Use
+                </div>
+
+                <div class="metric-value">
+                    38%
+                </div>
+
+                <div class="metric-chip warning">
+                    Efficient mode
+                </div>
+
+            </div>
+
+            <div class="metric-card">
+
+                <div class="metric-label">
+                    Security
+                </div>
+
+                <div class="metric-value">
+                    98%
+                </div>
+
+                <div class="metric-chip primary">
+                    All systems clear
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONNECTION STATUS -->
+
+        <div class="status-card">
+
+            <div class="status-left">
+
+                <div class="status-icon">
+                    📡
+                </div>
+
+                <div>
+
+                    <div class="status-title">
+                        MQTT Connection
+                    </div>
+
+                    <div
+                        id="statusDescription"
+                        class="status-description"
+                    >
+                        Connected to smart home broker
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="statusBadge"
+                class="status-badge"
+            >
+                ONLINE
+            </div>
+
+        </div>
+
+
+
+        <!-- LIGHTS -->
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Lighting
+            </div>
+
+            <div class="section-count">
+                2 Devices
+            </div>
+
+        </div>
+
+
+        <div class="devices">
+
+
+            <!-- LIGHT 1 -->
+
+            <div
+                id="device1"
+                class="device"
+            >
+
+                <div class="device-top">
+
+                    <div class="device-icon">
+                        💡
+                    </div>
+
+                    <div
+                        id="light1Status"
+                        class="device-status"
+                    >
+                        OFF
+                    </div>
+
+                </div>
+
+
+                <div class="device-name">
+                    Living Room
+                </div>
+
+                <div class="device-description">
+                    Main room lighting
+                </div>
+
+
+                <div class="device-bottom">
+
+                    <div
+                        id="light1State"
+                        class="device-state"
+                    >
+                        Light is currently off
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="light1"
+                            onchange="toggleLight(1)"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- LIGHT 2 -->
+
+            <div
+                id="device2"
+                class="device"
+            >
+
+                <div class="device-top">
+
+                    <div class="device-icon">
+                        💡
+                    </div>
+
+                    <div
+                        id="light2Status"
+                        class="device-status"
+                    >
+                        OFF
+                    </div>
+
+                </div>
+
+
+                <div class="device-name">
+                    Bedroom
+                </div>
+
+                <div class="device-description">
+                    Bedroom lighting
+                </div>
+
+
+                <div class="device-bottom">
+
+                    <div
+                        id="light2State"
+                        class="device-state"
+                    >
+                        Light is currently off
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="light2"
+                            onchange="toggleLight(2)"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="footer">
+            Smart Home • ESP32 • MQTT
+        </div>
+
+
+    </main>
+
+</div>
+
+
+
 <script>
 
-    // ============================
-    // MQTT SETTINGS
-    // ============================
 
-    const broker = "wss://broker.hivemq.com:8884/mqtt";
+    /* =====================================================
+       LOGIN
+       ===================================================== */
 
-
-    // ============================
-    // CONNECT
-    // ============================
-
-    const client = mqtt.connect(broker, {
-
-        clientId:
-            "SmartHomeWeb-" +
-            Math.random()
-                .toString(16)
-                .substring(2),
-
-        clean: true,
-
-        connectTimeout: 5000,
-
-        reconnectPeriod: 2000
-
-    });
+    const LOGIN_USERNAME = "default";
+    const LOGIN_PASSWORD = "default";
 
 
-    // ============================
-    // CONNECTED
-    // ============================
+    function login(event) {
 
-    client.on("connect", function () {
-
-        console.log("MQTT connected");
-
-        document.getElementById("connectionStatus")
-            .innerText = "🟢 Connected to ESP32";
-
-        document.getElementById("connectionStatus")
-            .style.background = "#dcfce7";
+        event.preventDefault();
 
 
-        // Subscribe to device states
+        const username =
+            document.getElementById("username").value.trim();
 
-        client.subscribe("smart_home/light1/state");
-
-        client.subscribe("smart_home/light2/state");
-
-    });
+        const password =
+            document.getElementById("password").value;
 
 
-    // ============================
-    // DISCONNECTED / ERROR
-    // ============================
+        if (
+            username === LOGIN_USERNAME &&
+            password === LOGIN_PASSWORD
+        ) {
 
-    client.on("error", function (error) {
-
-        console.log("MQTT Error:", error);
-
-        document.getElementById("connectionStatus")
-            .innerText = "🔴 MQTT Connection Error";
-
-    });
+            sessionStorage.setItem(
+                "smartHomeLoggedIn",
+                "true"
+            );
 
 
-    client.on("offline", function () {
-
-        document.getElementById("connectionStatus")
-            .innerText = "🟡 Reconnecting...";
-
-    });
+            document.getElementById("loginError")
+                .style.display = "none";
 
 
-    // ============================
-    // RECEIVE MESSAGE
-    // ============================
+            showDashboard();
 
-    client.on("message", function (topic, message) {
+        } else {
 
-        const value = message.toString();
-
-        console.log(topic, value);
-
-
-        if (topic === "smart_home/light1/state") {
-
-            updateLight(1, value);
+            document.getElementById("loginError")
+                .style.display = "block";
 
         }
 
+    }
 
-        if (topic === "smart_home/light2/state") {
 
-            updateLight(2, value);
+
+    /* =====================================================
+       SHOW DASHBOARD
+       ===================================================== */
+
+    function showDashboard() {
+
+        document
+            .getElementById("loginPage")
+            .classList.add("hidden");
+
+
+        document
+            .getElementById("dashboard")
+            .classList.add("active");
+
+    }
+
+
+
+    /* =====================================================
+       LOGOUT
+       ===================================================== */
+
+    function logout() {
+
+        sessionStorage.removeItem(
+            "smartHomeLoggedIn"
+        );
+
+
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+
+
+        document
+            .getElementById("dashboard")
+            .classList.remove("active");
+
+
+        document
+            .getElementById("loginPage")
+            .classList.remove("hidden");
+
+    }
+
+
+
+    /* =====================================================
+       CHECK LOGIN
+       ===================================================== */
+
+    window.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const loggedIn =
+                sessionStorage.getItem(
+                    "smartHomeLoggedIn"
+                );
+
+
+            if (loggedIn === "true") {
+
+                showDashboard();
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       MQTT
+       ===================================================== */
+
+    const broker =
+        "wss://broker.hivemq.com:8884/mqtt";
+
+
+    const client =
+        mqtt.connect(
+            broker,
+            {
+
+                clientId:
+                    "SmartHomeWeb-" +
+                    Math.random()
+                        .toString(16)
+                        .substring(2),
+
+                clean: true,
+
+                connectTimeout: 5000,
+
+                reconnectPeriod: 2000
+
+            }
+        );
+
+
+
+    /* =====================================================
+       MQTT CONNECTED
+       ===================================================== */
+
+    client.on(
+        "connect",
+        function () {
+
+            console.log(
+                "MQTT connected"
+            );
+
+
+            updateConnection(
+                true
+            );
+
+
+            client.subscribe(
+                "smart_home/light1/state"
+            );
+
+
+            client.subscribe(
+                "smart_home/light2/state"
+            );
+
+        }
+    );
+
+
+
+    /* =====================================================
+       MQTT ERROR
+       ===================================================== */
+
+    client.on(
+        "error",
+        function (error) {
+
+            console.log(
+                "MQTT Error:",
+                error
+            );
+
+
+            updateConnection(
+                false,
+                "Connection error"
+            );
+
+        }
+    );
+
+
+
+    /* =====================================================
+       MQTT OFFLINE
+       ===================================================== */
+
+    client.on(
+        "offline",
+        function () {
+
+            updateConnection(
+                false,
+                "Reconnecting..."
+            );
+
+        }
+    );
+
+
+
+    /* =====================================================
+       CONNECTION UI
+       ===================================================== */
+
+    function updateConnection(
+        connected,
+        message = ""
+    ) {
+
+        const connection =
+            document.getElementById(
+                "connection"
+            );
+
+
+        const dot =
+            document.getElementById(
+                "connectionDot"
+            );
+
+
+        const text =
+            document.getElementById(
+                "connectionText"
+            );
+
+
+        const badge =
+            document.getElementById(
+                "statusBadge"
+            );
+
+
+        const description =
+            document.getElementById(
+                "statusDescription"
+            );
+
+
+        if (connected) {
+
+            connection.style.background =
+                "#f0fdf4";
+
+            connection.style.color =
+                "#15803d";
+
+            dot.style.background =
+                "#22c55e";
+
+            text.innerText =
+                "Connected";
+
+            badge.innerText =
+                "ONLINE";
+
+            badge.style.background =
+                "#dcfce7";
+
+            badge.style.color =
+                "#15803d";
+
+            description.innerText =
+                "Connected to smart home broker";
+
+        } else {
+
+            connection.style.background =
+                "#fff7ed";
+
+            connection.style.color =
+                "#c2410c";
+
+            dot.style.background =
+                "#f59e0b";
+
+            text.innerText =
+                "Reconnecting";
+
+            badge.innerText =
+                "OFFLINE";
+
+            badge.style.background =
+                "#ffedd5";
+
+            badge.style.color =
+                "#c2410c";
+
+            description.innerText =
+                message || "MQTT connection unavailable";
 
         }
 
-    });
+    }
 
 
-    // ============================
-    // TOGGLE LIGHT
-    // ============================
 
-    function toggleLight(lightNumber) {
+    /* =====================================================
+       RECEIVE MQTT MESSAGE
+       ===================================================== */
+
+    client.on(
+        "message",
+        function (topic, message) {
+
+            const value =
+                message
+                    .toString()
+                    .trim()
+                    .toUpperCase();
+
+
+            console.log(
+                topic,
+                value
+            );
+
+
+            if (
+                topic ===
+                "smart_home/light1/state"
+            ) {
+
+                updateLight(
+                    1,
+                    value
+                );
+
+            }
+
+
+            if (
+                topic ===
+                "smart_home/light2/state"
+            ) {
+
+                updateLight(
+                    2,
+                    value
+                );
+
+            }
+
+        }
+    );
+
+
+
+    /* =====================================================
+       TOGGLE LIGHT
+       ===================================================== */
+
+    function toggleLight(
+        lightNumber
+    ) {
 
         const checkbox =
-            document.getElementById("light" + lightNumber);
+            document.getElementById(
+                "light" +
+                lightNumber
+            );
 
 
         const state =
-            checkbox.checked ? "ON" : "OFF";
+            checkbox.checked
+                ? "ON"
+                : "OFF";
 
 
         const topic =
@@ -372,7 +2149,11 @@
             lightNumber;
 
 
-        client.publish(topic, state);
+        client.publish(
+            topic,
+            state
+        );
+
 
         console.log(
             "Published:",
@@ -383,21 +2164,43 @@
     }
 
 
-    // ============================
-    // UPDATE UI
-    // ============================
 
-    function updateLight(lightNumber, state) {
+    /* =====================================================
+       UPDATE LIGHT UI
+       ===================================================== */
+
+    function updateLight(
+        lightNumber,
+        state
+    ) {
 
         const checkbox =
             document.getElementById(
-                "light" + lightNumber
+                "light" +
+                lightNumber
+            );
+
+
+        const device =
+            document.getElementById(
+                "device" +
+                lightNumber
+            );
+
+
+        const status =
+            document.getElementById(
+                "light" +
+                lightNumber +
+                "Status"
             );
 
 
         const stateText =
             document.getElementById(
-                "light" + lightNumber + "State"
+                "light" +
+                lightNumber +
+                "State"
             );
 
 
@@ -405,13 +2208,29 @@
 
             checkbox.checked = true;
 
-            stateText.innerText = "ON";
+            device.classList.add(
+                "on"
+            );
+
+            status.innerText =
+                "ON";
+
+            stateText.innerText =
+                "Light is currently on";
 
         } else {
 
             checkbox.checked = false;
 
-            stateText.innerText = "OFF";
+            device.classList.remove(
+                "on"
+            );
+
+            status.innerText =
+                "OFF";
+
+            stateText.innerText =
+                "Light is currently off";
 
         }
 
@@ -419,6 +2238,8 @@
 
 </script>
 
+
 </body>
 
 </html>
+```
