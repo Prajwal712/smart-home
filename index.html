@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Home</title>
+
+    <!-- MQTT.js -->
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            color: #222;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 12px;
+            border-radius: 10px;
+            background: #eee;
+            margin-bottom: 20px;
+        }
+
+        .device {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .device-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon {
+            font-size: 35px;
+        }
+
+        .device-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .state {
+            font-size: 13px;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        /* Toggle */
+
+        .switch {
+            position: relative;
+            width: 55px;
+            height: 30px;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+
+            inset: 0;
+
+            background: #ccc;
+
+            border-radius: 30px;
+
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            content: "";
+
+            position: absolute;
+
+            width: 24px;
+            height: 24px;
+
+            left: 3px;
+            top: 3px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            transition: 0.3s;
+        }
+
+        input:checked + .slider {
+            background: #22c55e;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+
+        .section-title {
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #777;
+            text-transform: uppercase;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>🏠 Smart Home</h1>
+
+    <div class="subtitle">
+        ESP32 Control Panel
+    </div>
+
+
+    <div id="connectionStatus" class="status">
+        🔴 Connecting...
+    </div>
+
+
+    <div class="section-title">
+        Lights
+    </div>
+
+
+    <!-- LIGHT 1 -->
+
+    <div class="device">
+
+        <div class="device-info">
+
+            <div class="icon">
+                💡
+            </div>
+
+            <div>
+
+                <div class="device-name">
+                    Light 1
+                </div>
+
+                <div class="state" id="light1State">
+                    OFF
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <label class="switch">
+
+            <input
+                type="checkbox"
+                id="light1"
+                onchange="toggleLight(1)"
+            >
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+
+    <!-- LIGHT 2 -->
+
+    <div class="device">
+
+        <div class="device-info">
+
+            <div class="icon">
+                💡
+            </div>
+
+            <div>
+
+                <div class="device-name">
+                    Light 2
+                </div>
+
+                <div class="state" id="light2State">
+                    OFF
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <label class="switch">
+
+            <input
+                type="checkbox"
+                id="light2"
+                onchange="toggleLight(2)"
+            >
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // ============================
+    // MQTT SETTINGS
+    // ============================
+
+    const broker = "wss://broker.hivemq.com:8884/mqtt";
+
+
+    // ============================
+    // CONNECT
+    // ============================
+
+    const client = mqtt.connect(broker, {
+
+        clientId:
+            "SmartHomeWeb-" +
+            Math.random()
+                .toString(16)
+                .substring(2),
+
+        clean: true,
+
+        connectTimeout: 5000,
+
+        reconnectPeriod: 2000
+
+    });
+
+
+    // ============================
+    // CONNECTED
+    // ============================
+
+    client.on("connect", function () {
+
+        console.log("MQTT connected");
+
+        document.getElementById("connectionStatus")
+            .innerText = "🟢 Connected to ESP32";
+
+        document.getElementById("connectionStatus")
+            .style.background = "#dcfce7";
+
+
+        // Subscribe to device states
+
+        client.subscribe("smart_home/light1/state");
+
+        client.subscribe("smart_home/light2/state");
+
+    });
+
+
+    // ============================
+    // DISCONNECTED / ERROR
+    // ============================
+
+    client.on("error", function (error) {
+
+        console.log("MQTT Error:", error);
+
+        document.getElementById("connectionStatus")
+            .innerText = "🔴 MQTT Connection Error";
+
+    });
+
+
+    client.on("offline", function () {
+
+        document.getElementById("connectionStatus")
+            .innerText = "🟡 Reconnecting...";
+
+    });
+
+
+    // ============================
+    // RECEIVE MESSAGE
+    // ============================
+
+    client.on("message", function (topic, message) {
+
+        const value = message.toString();
+
+        console.log(topic, value);
+
+
+        if (topic === "smart_home/light1/state") {
+
+            updateLight(1, value);
+
+        }
+
+
+        if (topic === "smart_home/light2/state") {
+
+            updateLight(2, value);
+
+        }
+
+    });
+
+
+    // ============================
+    // TOGGLE LIGHT
+    // ============================
+
+    function toggleLight(lightNumber) {
+
+        const checkbox =
+            document.getElementById("light" + lightNumber);
+
+
+        const state =
+            checkbox.checked ? "ON" : "OFF";
+
+
+        const topic =
+            "smart_home/light" +
+            lightNumber;
+
+
+        client.publish(topic, state);
+
+        console.log(
+            "Published:",
+            topic,
+            state
+        );
+
+    }
+
+
+    // ============================
+    // UPDATE UI
+    // ============================
+
+    function updateLight(lightNumber, state) {
+
+        const checkbox =
+            document.getElementById(
+                "light" + lightNumber
+            );
+
+
+        const stateText =
+            document.getElementById(
+                "light" + lightNumber + "State"
+            );
+
+
+        if (state === "ON") {
+
+            checkbox.checked = true;
+
+            stateText.innerText = "ON";
+
+        } else {
+
+            checkbox.checked = false;
+
+            stateText.innerText = "OFF";
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>
