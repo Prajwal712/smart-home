@@ -38,10 +38,13 @@
 
             --bg: #f5f7fb;
             --card: #ffffff;
+            --surface: rgba(255,255,255,0.8);
+            --surface-strong: rgba(255,255,255,0.96);
+            --surface-soft: #f8fafc;
 
             --text: #111827;
             --muted: #6b7280;
-
+            --heading: #0f172a;
             --border: #e5e7eb;
 
             --shadow:
@@ -66,6 +69,22 @@
 
             min-height: 100vh;
 
+        }
+
+
+        body.dark-mode {
+            --bg: #0b1220;
+            --card: #101b2d;
+            --surface: rgba(15, 23, 42, 0.8);
+            --surface-strong: rgba(15, 23, 42, 0.95);
+            --surface-soft: #111827;
+            --text: #e5eefb;
+            --muted: #9aa9c3;
+            --heading: #f8fafc;
+            --border: rgba(148, 163, 184, 0.2);
+            --shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
+            background: linear-gradient(180deg, #0b1220 0%, #111827 100%);
+            color: var(--text);
         }
 
 
@@ -204,6 +223,25 @@
 
             letter-spacing: -0.7px;
 
+        }
+
+
+        body.dark-mode .login-card {
+            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(148, 163, 184, 0.18);
+            box-shadow: 0 24px 55px rgba(2, 6, 23, 0.45);
+        }
+
+
+        body.dark-mode .input-group input {
+            background: rgba(15, 23, 42, 0.7);
+            border-color: rgba(148, 163, 184, 0.3);
+            color: var(--text);
+        }
+
+
+        body.dark-mode .input-group input::placeholder {
+            color: var(--muted);
         }
 
 
@@ -357,6 +395,14 @@
         }
 
 
+        .demo-credentials {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+
         .login-button:hover {
 
             transform: translateY(-1px);
@@ -434,7 +480,7 @@
 
             height: 76px;
 
-            background: rgba(255,255,255,0.8);
+            background: var(--surface);
 
             border-bottom: 1px solid rgba(148,163,184,0.2);
 
@@ -570,6 +616,7 @@
         }
 
 
+        .theme-toggle,
         .logout {
 
             border: none;
@@ -593,6 +640,15 @@
         }
 
 
+        body.dark-mode .theme-toggle,
+        body.dark-mode .logout {
+            background: rgba(148,163,184,0.12);
+            color: var(--text);
+            border: 1px solid rgba(148,163,184,0.2);
+        }
+
+
+        .theme-toggle:hover,
         .logout:hover {
 
             background: #fee2e2;
@@ -640,121 +696,6 @@
             color: var(--muted);
 
             font-size: 15px;
-
-        }
-
-
-        .overview-grid {
-
-            display: grid;
-
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-
-            gap: 18px;
-
-            margin-bottom: 30px;
-
-        }
-
-
-        .metric-card {
-
-            background: rgba(255,255,255,0.85);
-
-            border: 1px solid var(--border);
-
-            border-radius: 20px;
-
-            padding: 20px 22px;
-
-            box-shadow: var(--shadow);
-
-            position: relative;
-
-            overflow: hidden;
-
-        }
-
-
-        .metric-card::before {
-
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), #8b5cf6);
-
-        }
-
-
-        .metric-label {
-
-            font-size: 12px;
-
-            color: var(--muted);
-
-            text-transform: uppercase;
-
-            letter-spacing: 0.08em;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .metric-value {
-
-            font-size: 32px;
-
-            font-weight: 800;
-
-            letter-spacing: -0.7px;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .metric-chip {
-
-            display: inline-block;
-
-            padding: 7px 10px;
-
-            border-radius: 999px;
-
-            font-size: 11px;
-
-            font-weight: 700;
-
-        }
-
-
-        .metric-chip.success {
-
-            background: #dcfce7;
-
-            color: #15803d;
-
-        }
-
-
-        .metric-chip.warning {
-
-            background: #fff7ed;
-
-            color: #c2410c;
-
-        }
-
-
-        .metric-chip.primary {
-
-            background: #eef2ff;
-
-            color: #4338ca;
 
         }
 
@@ -1328,12 +1269,12 @@
 
 
         <div class="login-title">
-            Smart Home
+            School Automation
         </div>
 
 
         <div class="login-subtitle">
-            Sign in to access your home controls
+            Sign in to access campus controls
         </div>
 
 
@@ -1406,9 +1347,13 @@
 
         </form>
 
+        <div class="demo-credentials">
+            Demo: default / default
+        </div>
+
 
         <div class="login-footer">
-            Smart Home Control System
+            School Automation Control System
         </div>
 
     </div>
@@ -1437,11 +1382,11 @@
             <div class="brand-text">
 
                 <h2>
-                    Smart Home
+                    School Automation
                 </h2>
 
                 <span>
-                    ESP32 Control System
+                    Campus Control System
                 </span>
 
             </div>
@@ -1470,6 +1415,15 @@
 
             </div>
 
+
+            <button
+                id="themeToggle"
+                class="theme-toggle"
+                type="button"
+                aria-label="Toggle dark mode"
+            >
+                🌙 Dark
+            </button>
 
             <button
                 class="logout"
@@ -1503,59 +1457,6 @@
 
         </div>
 
-
-
-        <div class="overview-grid">
-
-            <div class="metric-card">
-
-                <div class="metric-label">
-                    Active Rooms
-                </div>
-
-                <div class="metric-value">
-                    04
-                </div>
-
-                <div class="metric-chip success">
-                    +2 from yesterday
-                </div>
-
-            </div>
-
-            <div class="metric-card">
-
-                <div class="metric-label">
-                    Energy Use
-                </div>
-
-                <div class="metric-value">
-                    38%
-                </div>
-
-                <div class="metric-chip warning">
-                    Efficient mode
-                </div>
-
-            </div>
-
-            <div class="metric-card">
-
-                <div class="metric-label">
-                    Security
-                </div>
-
-                <div class="metric-value">
-                    98%
-                </div>
-
-                <div class="metric-chip primary">
-                    All systems clear
-                </div>
-
-            </div>
-
-        </div>
 
 
         <!-- CONNECTION STATUS -->
@@ -1639,11 +1540,11 @@
 
 
                 <div class="device-name">
-                    Living Room
+                    Classroom 1
                 </div>
 
                 <div class="device-description">
-                    Main room lighting
+                    Main classroom lighting
                 </div>
 
 
@@ -1699,11 +1600,11 @@
 
 
                 <div class="device-name">
-                    Bedroom
+                    Classroom 2
                 </div>
 
                 <div class="device-description">
-                    Bedroom lighting
+                    Secondary classroom lighting
                 </div>
 
 
@@ -1738,7 +1639,7 @@
 
 
         <div class="footer">
-            Smart Home • ESP32 • MQTT
+            School Automation • Campus • MQTT
         </div>
 
 
@@ -1750,49 +1651,57 @@
 
 <script>
 
+    const THEME_KEY = "schoolAutomationTheme";
+
+    function applyTheme(theme) {
+        const darkMode = theme === "dark";
+        document.body.classList.toggle("dark-mode", darkMode);
+
+        const button = document.getElementById("themeToggle");
+        if (button) {
+            button.textContent = darkMode ? "☀️ Light" : "🌙 Dark";
+            button.setAttribute("aria-label", darkMode ? "Switch to light mode" : "Switch to dark mode");
+        }
+    }
+
+    function toggleTheme() {
+        const nextTheme = document.body.classList.contains("dark-mode") ? "light" : "dark";
+        localStorage.setItem(THEME_KEY, nextTheme);
+        applyTheme(nextTheme);
+    }
+
 
     /* =====================================================
        LOGIN
        ===================================================== */
 
-    const LOGIN_USERNAME = "default";
-    const LOGIN_PASSWORD = "default";
-
+    const VALID_CREDENTIALS = [
+        ["default", "default"],
+        ["admin", "admin"]
+    ];
 
     function login(event) {
 
         event.preventDefault();
 
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
 
-        const username =
-            document.getElementById("username").value.trim();
+        const normalizedUsername = username.toLowerCase();
+        const normalizedPassword = password.toLowerCase();
 
-        const password =
-            document.getElementById("password").value;
+        const isValidLogin = VALID_CREDENTIALS.some(
+            ([validUsername, validPassword]) =>
+                normalizedUsername === validUsername.toLowerCase() &&
+                normalizedPassword === validPassword.toLowerCase()
+        );
 
-
-        if (
-            username === LOGIN_USERNAME &&
-            password === LOGIN_PASSWORD
-        ) {
-
-            sessionStorage.setItem(
-                "smartHomeLoggedIn",
-                "true"
-            );
-
-
-            document.getElementById("loginError")
-                .style.display = "none";
-
-
+        if (isValidLogin) {
+            sessionStorage.setItem("smartHomeLoggedIn", "true");
+            document.getElementById("loginError").style.display = "none";
             showDashboard();
-
         } else {
-
-            document.getElementById("loginError")
-                .style.display = "block";
-
+            document.getElementById("loginError").style.display = "block";
         }
 
     }
@@ -1805,14 +1714,8 @@
 
     function showDashboard() {
 
-        document
-            .getElementById("loginPage")
-            .classList.add("hidden");
-
-
-        document
-            .getElementById("dashboard")
-            .classList.add("active");
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("dashboard").classList.add("active");
 
     }
 
@@ -1824,23 +1727,14 @@
 
     function logout() {
 
-        sessionStorage.removeItem(
-            "smartHomeLoggedIn"
-        );
-
+        sessionStorage.removeItem("smartHomeLoggedIn");
 
         document.getElementById("username").value = "";
         document.getElementById("password").value = "";
 
-
-        document
-            .getElementById("dashboard")
-            .classList.remove("active");
-
-
-        document
-            .getElementById("loginPage")
-            .classList.remove("hidden");
+        document.getElementById("dashboard").classList.remove("active");
+        document.getElementById("loginPage").classList.remove("hidden");
+        document.getElementById("loginError").style.display = "none";
 
     }
 
@@ -1850,24 +1744,25 @@
        CHECK LOGIN
        ===================================================== */
 
-    window.addEventListener(
-        "DOMContentLoaded",
-        function () {
+    window.addEventListener("DOMContentLoaded", function () {
 
-            const loggedIn =
-                sessionStorage.getItem(
-                    "smartHomeLoggedIn"
-                );
+        const savedTheme = localStorage.getItem(THEME_KEY) || "light";
+        applyTheme(savedTheme);
 
-
-            if (loggedIn === "true") {
-
-                showDashboard();
-
-            }
-
+        const themeButton = document.getElementById("themeToggle");
+        if (themeButton) {
+            themeButton.addEventListener("click", toggleTheme);
         }
-    );
+
+        const loggedIn = sessionStorage.getItem("smartHomeLoggedIn");
+        if (loggedIn === "true") {
+            showDashboard();
+        } else {
+            document.getElementById("dashboard").classList.remove("active");
+            document.getElementById("loginPage").classList.remove("hidden");
+        }
+
+    });
 
 
 
