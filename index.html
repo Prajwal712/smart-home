@@ -1231,6 +1231,530 @@
         }
 
 
+        /* =====================================================
+           SCHEDULES & MODAL STYLES
+           ===================================================== */
+
+        .schedules-section {
+            margin-top: 40px;
+        }
+
+        .device-sched-btn {
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--primary-dark);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body.dark-mode .device-sched-btn {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border-color: rgba(165, 180, 252, 0.3);
+        }
+
+        .device-sched-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .device-sched-badge {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        body.dark-mode .device-sched-badge {
+            background: rgba(30, 58, 138, 0.4);
+            color: #93c5fd;
+            border-color: rgba(147, 197, 253, 0.2);
+        }
+
+        .device-sched-badge.active-now {
+            background: #f0fdf4;
+            color: #15803d;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        body.dark-mode .device-sched-badge.active-now {
+            background: rgba(20, 83, 45, 0.4);
+            color: #86efac;
+            border-color: rgba(134, 239, 172, 0.3);
+        }
+
+        .btn-primary-sm {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary-sm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+        }
+
+        .schedules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 18px;
+        }
+
+        .schedule-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: 0.2s ease;
+        }
+
+        body.dark-mode .schedule-card {
+            background: rgba(16, 27, 45, 0.95);
+        }
+
+        .schedule-card.disabled {
+            opacity: 0.65;
+            filter: grayscale(0.2);
+        }
+
+        .schedule-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .schedule-device-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .schedule-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        body.dark-mode .schedule-icon {
+            background: rgba(99, 102, 241, 0.18);
+        }
+
+        .schedule-title {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .schedule-subtitle {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .schedule-time-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.dark-mode .schedule-time-box {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .schedule-time-range {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--heading);
+        }
+
+        .schedule-duration-pill {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        body.dark-mode .schedule-duration-pill {
+            background: rgba(99, 102, 241, 0.3);
+            color: #c7d2fe;
+        }
+
+        .schedule-days-container {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .day-chip {
+            flex: 1;
+            text-align: center;
+            padding: 5px 2px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 8px;
+            background: var(--surface-soft);
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .day-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .schedule-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .schedule-status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .schedule-status-badge.active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .schedule-status-badge.upcoming {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .schedule-status-badge.off {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        body.dark-mode .schedule-status-badge.off {
+            background: rgba(148, 163, 184, 0.15);
+            color: #94a3b8;
+        }
+
+        .delete-sched-btn {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .delete-sched-btn:hover {
+            background: #fee2e2;
+        }
+
+        body.dark-mode .delete-sched-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .empty-schedules {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--card);
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            color: var(--muted);
+        }
+
+        .empty-schedules-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            max-width: 520px;
+            width: 100%;
+            padding: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px);
+            transition: 0.25s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .modal-close {
+            background: var(--surface-soft);
+            border: none;
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            height: 46px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 14px;
+            outline: none;
+            background: var(--surface-soft);
+            color: var(--text);
+            transition: 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .day-select-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .day-btn {
+            padding: 10px 0;
+            border: 1px solid var(--border);
+            background: var(--surface-soft);
+            color: var(--text);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .day-btn.selected {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .presets-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--surface-soft);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--muted);
+            transition: 0.2s;
+        }
+
+        .preset-btn:hover {
+            color: var(--primary-dark);
+            border-color: var(--primary);
+        }
+
+        .duration-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .duration-presets {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .time-preview-card {
+            background: #eff6ff;
+            border: 1px dashed #93c5fd;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #1e40af;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .time-preview-card {
+            background: rgba(30, 58, 138, 0.3);
+            border-color: rgba(147, 197, 253, 0.3);
+            color: #bfdbfe;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-secondary {
+            background: var(--surface-soft);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* TOAST NOTIFICATIONS */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: auto;
+            background: var(--card);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            max-width: 380px;
+            animation: toastIn 0.3s ease;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast-icon {
+            font-size: 22px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .toast-msg {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        @media (max-width: 700px) {
+
+
         @media (max-width: 380px) {
 
             .brand-text {
@@ -1529,11 +2053,17 @@
                         💡
                     </div>
 
-                    <div
-                        id="light1Status"
-                        class="device-status"
-                    >
-                        OFF
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button class="device-sched-btn" onclick="openScheduleModal(1)">
+                            📅 Schedule
+                        </button>
+
+                        <div
+                            id="light1Status"
+                            class="device-status"
+                        >
+                            OFF
+                        </div>
                     </div>
 
                 </div>
@@ -1545,6 +2075,10 @@
 
                 <div class="device-description">
                     Main classroom lighting
+                </div>
+
+                <div id="light1SchedBadge" class="device-sched-badge hidden">
+                    <!-- Dynamic schedule badge -->
                 </div>
 
 
@@ -1589,11 +2123,17 @@
                         💡
                     </div>
 
-                    <div
-                        id="light2Status"
-                        class="device-status"
-                    >
-                        OFF
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <button class="device-sched-btn" onclick="openScheduleModal(2)">
+                            📅 Schedule
+                        </button>
+
+                        <div
+                            id="light2Status"
+                            class="device-status"
+                        >
+                            OFF
+                        </div>
                     </div>
 
                 </div>
@@ -1605,6 +2145,10 @@
 
                 <div class="device-description">
                     Secondary classroom lighting
+                </div>
+
+                <div id="light2SchedBadge" class="device-sched-badge hidden">
+                    <!-- Dynamic schedule badge -->
                 </div>
 
 
@@ -1637,6 +2181,34 @@
 
         </div>
 
+        <!-- =====================================================
+             AUTOMATED SCHEDULES SECTION
+             ===================================================== -->
+        <div class="schedules-section">
+
+            <div class="section-header">
+
+                <div>
+                    <div class="section-title">
+                        ⏰ Automated Schedules
+                    </div>
+                    <div style="font-size: 12px; color: var(--muted); margin-top: 2px;">
+                        Automatically turn devices ON during designated weekly time slots
+                    </div>
+                </div>
+
+                <button class="btn-primary-sm" onclick="openScheduleModal()">
+                    + Add Schedule
+                </button>
+
+            </div>
+
+            <div id="schedulesList" class="schedules-grid">
+                <!-- Rendered dynamically -->
+            </div>
+
+        </div>
+
 
         <div class="footer">
             School Automation • Campus • MQTT
@@ -1646,6 +2218,134 @@
     </main>
 
 </div>
+
+<!-- =========================================================
+     CREATE / EDIT SCHEDULE MODAL
+     ========================================================= -->
+
+<div id="scheduleModal" class="modal-overlay" onclick="handleModalOverlayClick(event)">
+
+    <div class="modal-card">
+
+        <div class="modal-header">
+            <div class="modal-title">
+                📅 Schedule Device Automation
+            </div>
+            <button class="modal-close" onclick="closeScheduleModal()">✕</button>
+        </div>
+
+        <form id="scheduleForm" onsubmit="saveScheduleForm(event)">
+
+            <div class="form-group">
+                <label for="schedDevice">Target Device</label>
+                <select id="schedDevice" class="form-control" required>
+                    <option value="1">Classroom 1 Light</option>
+                    <option value="2">Classroom 2 Light</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="schedLabel">Schedule Name / Purpose</label>
+                <input
+                    type="text"
+                    id="schedLabel"
+                    class="form-control"
+                    placeholder="e.g. Morning Lecture, Study Hours"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Repeat Days of Week</label>
+
+                <div class="day-select-grid">
+                    <button type="button" class="day-btn" data-day="1" onclick="toggleDayBtn(1)">Mon</button>
+                    <button type="button" class="day-btn" data-day="2" onclick="toggleDayBtn(2)">Tue</button>
+                    <button type="button" class="day-btn" data-day="3" onclick="toggleDayBtn(3)">Wed</button>
+                    <button type="button" class="day-btn" data-day="4" onclick="toggleDayBtn(4)">Thu</button>
+                    <button type="button" class="day-btn" data-day="5" onclick="toggleDayBtn(5)">Fri</button>
+                    <button type="button" class="day-btn" data-day="6" onclick="toggleDayBtn(6)">Sat</button>
+                    <button type="button" class="day-btn" data-day="7" onclick="toggleDayBtn(7)">Sun</button>
+                </div>
+
+                <div class="presets-row">
+                    <button type="button" class="preset-btn" onclick="selectDayPreset('weekdays')">Weekdays (Mon-Fri)</button>
+                    <button type="button" class="preset-btn" onclick="selectDayPreset('weekends')">Weekends (Sat-Sun)</button>
+                    <button type="button" class="preset-btn" onclick="selectDayPreset('everyday')">Everyday</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="schedStartTime">Start Time (Turn ON)</label>
+                <input
+                    type="time"
+                    id="schedStartTime"
+                    class="form-control"
+                    value="08:00"
+                    onchange="updateTimePreview()"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Turn-ON Duration</label>
+                <div class="duration-inputs">
+                    <div>
+                        <span style="font-size: 11px; color: var(--muted);">Hours</span>
+                        <input
+                            type="number"
+                            id="schedHours"
+                            class="form-control"
+                            min="0"
+                            max="23"
+                            value="2"
+                            oninput="updateTimePreview()"
+                        >
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: var(--muted);">Minutes</span>
+                        <input
+                            type="number"
+                            id="schedMinutes"
+                            class="form-control"
+                            min="0"
+                            max="59"
+                            value="0"
+                            step="5"
+                            oninput="updateTimePreview()"
+                        >
+                    </div>
+                </div>
+
+                <div class="duration-presets">
+                    <button type="button" class="preset-btn" onclick="setDurationPreset(0, 30)">30m</button>
+                    <button type="button" class="preset-btn" onclick="setDurationPreset(1, 0)">1h</button>
+                    <button type="button" class="preset-btn" onclick="setDurationPreset(2, 0)">2h</button>
+                    <button type="button" class="preset-btn" onclick="setDurationPreset(4, 0)">4h</button>
+                    <button type="button" class="preset-btn" onclick="setDurationPreset(8, 0)">8h</button>
+                </div>
+            </div>
+
+            <div id="timePreviewCard" class="time-preview-card">
+                <span>⏱️</span>
+                <span id="timePreviewText">
+                    Light will turn ON at 08:00 AM and automatically turn OFF at 10:00 AM (2 hours)
+                </span>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeScheduleModal()">Cancel</button>
+                <button type="submit" class="login-button" style="width: auto; padding: 0 24px;">Save Schedule</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toastContainer" class="toast-container"></div>
 
 
 
@@ -2130,6 +2830,414 @@
         }
 
     }
+
+
+    /* =====================================================
+       AUTOMATED SCHEDULER ENGINE
+       ===================================================== */
+
+    const SCHEDULE_STORAGE_KEY = "smartHomeSchedules";
+    let selectedDaysSet = new Set([1, 2, 3, 4, 5]);
+
+    // Initial schedules setup
+    function getSchedules() {
+        try {
+            const raw = localStorage.getItem(SCHEDULE_STORAGE_KEY);
+            if (!raw) {
+                const defaultSchedules = [
+                    {
+                        id: "sched_default_1",
+                        deviceId: 1,
+                        deviceName: "Classroom 1",
+                        label: "Classroom 1 Morning Schedule",
+                        days: [1, 2, 3, 4, 5],
+                        startTime: "08:00",
+                        durationMinutes: 120,
+                        enabled: true
+                    }
+                ];
+                localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(defaultSchedules));
+                return defaultSchedules;
+            }
+            return JSON.parse(raw);
+        } catch (e) {
+            console.error("Failed to load schedules", e);
+            return [];
+        }
+    }
+
+    function saveSchedules(schedules) {
+        localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(schedules));
+        renderSchedules();
+    }
+
+    const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    function formatTime24to12(timeStr) {
+        if (!timeStr) return "";
+        const [h, m] = timeStr.split(":").map(Number);
+        const period = h >= 12 ? "PM" : "AM";
+        const h12 = h % 12 === 0 ? 12 : h % 12;
+        return `${String(h12).padStart(2, "0")}:${String(m).padStart(2, "0")} ${period}`;
+    }
+
+    function minutesToFormattedTime(totalMinutes) {
+        const normalized = (totalMinutes % 1440 + 1440) % 1440;
+        const h = Math.floor(normalized / 60);
+        const m = normalized % 60;
+        const period = h >= 12 ? "PM" : "AM";
+        const h12 = h % 12 === 0 ? 12 : h % 12;
+        return `${String(h12).padStart(2, "0")}:${String(m).padStart(2, "0")} ${period}`;
+    }
+
+    function formatDuration(minutes) {
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        if (h > 0 && m > 0) return `${h} hr ${m} mins`;
+        if (h > 0) return `${h} ${h === 1 ? 'hr' : 'hrs'}`;
+        return `${m} mins`;
+    }
+
+    // Modal Control Functions
+    function openScheduleModal(deviceId = null) {
+        const modal = document.getElementById("scheduleModal");
+        if (deviceId) {
+            document.getElementById("schedDevice").value = String(deviceId);
+        }
+        document.getElementById("schedLabel").value = deviceId === 2 ? "Classroom 2 Class Schedule" : "Classroom 1 Class Schedule";
+        selectedDaysSet = new Set([1, 2, 3, 4, 5]);
+        updateDayButtons();
+        document.getElementById("schedStartTime").value = "08:00";
+        document.getElementById("schedHours").value = 2;
+        document.getElementById("schedMinutes").value = 0;
+        updateTimePreview();
+        modal.classList.add("active");
+    }
+
+    function closeScheduleModal() {
+        document.getElementById("scheduleModal").classList.remove("active");
+    }
+
+    function handleModalOverlayClick(event) {
+        if (event.target.id === "scheduleModal") {
+            closeScheduleModal();
+        }
+    }
+
+    function toggleDayBtn(dayNumber) {
+        if (selectedDaysSet.has(dayNumber)) {
+            if (selectedDaysSet.size > 1) {
+                selectedDaysSet.delete(dayNumber);
+            }
+        } else {
+            selectedDaysSet.add(dayNumber);
+        }
+        updateDayButtons();
+    }
+
+    function updateDayButtons() {
+        document.querySelectorAll(".day-btn").forEach(btn => {
+            const dayNum = Number(btn.getAttribute("data-day"));
+            if (selectedDaysSet.has(dayNum)) {
+                btn.classList.add("selected");
+            } else {
+                btn.classList.remove("selected");
+            }
+        });
+    }
+
+    function selectDayPreset(preset) {
+        if (preset === 'weekdays') selectedDaysSet = new Set([1, 2, 3, 4, 5]);
+        else if (preset === 'weekends') selectedDaysSet = new Set([6, 7]);
+        else if (preset === 'everyday') selectedDaysSet = new Set([1, 2, 3, 4, 5, 6, 7]);
+        updateDayButtons();
+    }
+
+    function setDurationPreset(hours, minutes) {
+        document.getElementById("schedHours").value = hours;
+        document.getElementById("schedMinutes").value = minutes;
+        updateTimePreview();
+    }
+
+    function updateTimePreview() {
+        const startTimeStr = document.getElementById("schedStartTime").value || "08:00";
+        const hours = parseInt(document.getElementById("schedHours").value) || 0;
+        const minutes = parseInt(document.getElementById("schedMinutes").value) || 0;
+        const totalDuration = hours * 60 + minutes;
+
+        const [startH, startM] = startTimeStr.split(":").map(Number);
+        const startTotalMins = startH * 60 + startM;
+        const endTotalMins = startTotalMins + totalDuration;
+
+        const startFormatted = formatTime24to12(startTimeStr);
+        const endFormatted = minutesToFormattedTime(endTotalMins);
+        const durationFormatted = formatDuration(totalDuration);
+
+        const previewText = `Light will automatically turn <strong>ON</strong> at <strong>${startFormatted}</strong> and turn <strong>OFF</strong> at <strong>${endFormatted}</strong> (Duration: ${durationFormatted})`;
+        document.getElementById("timePreviewText").innerHTML = previewText;
+    }
+
+    function saveScheduleForm(event) {
+        event.preventDefault();
+        const deviceId = parseInt(document.getElementById("schedDevice").value);
+        const label = document.getElementById("schedLabel").value.trim() || `Classroom ${deviceId} Schedule`;
+        const startTime = document.getElementById("schedStartTime").value;
+        const hours = parseInt(document.getElementById("schedHours").value) || 0;
+        const minutes = parseInt(document.getElementById("schedMinutes").value) || 0;
+        const durationMinutes = hours * 60 + minutes;
+
+        if (durationMinutes <= 0) {
+            alert("Please set a duration greater than 0 minutes.");
+            return;
+        }
+
+        const daysArray = Array.from(selectedDaysSet).sort((a, b) => a - b);
+        const deviceName = deviceId === 1 ? "Classroom 1" : "Classroom 2";
+
+        const newSched = {
+            id: "sched_" + Date.now(),
+            deviceId: deviceId,
+            deviceName: deviceName,
+            label: label,
+            days: daysArray,
+            startTime: startTime,
+            durationMinutes: durationMinutes,
+            enabled: true
+        };
+
+        const schedules = getSchedules();
+        schedules.push(newSched);
+        saveSchedules(schedules);
+
+        closeScheduleModal();
+        showToast("📅 Schedule Saved", `${label} for ${deviceName} added successfully`, "✅");
+        checkSchedules();
+    }
+
+    function toggleSchedule(id) {
+        const schedules = getSchedules();
+        const sched = schedules.find(s => s.id === id);
+        if (sched) {
+            sched.enabled = !sched.enabled;
+            saveSchedules(schedules);
+            showToast(sched.enabled ? "Schedule Enabled" : "Schedule Disabled", `Schedule "${sched.label}" is now ${sched.enabled ? 'active' : 'paused'}`, "⏱️");
+            checkSchedules();
+        }
+    }
+
+    function deleteSchedule(id) {
+        if (!confirm("Are you sure you want to delete this schedule?")) return;
+        let schedules = getSchedules();
+        const sched = schedules.find(s => s.id === id);
+        schedules = schedules.filter(s => s.id !== id);
+        saveSchedules(schedules);
+        if (sched) {
+            showToast("Schedule Deleted", `Removed "${sched.label}"`, "🗑️");
+        }
+        checkSchedules();
+    }
+
+    function renderSchedules() {
+        const container = document.getElementById("schedulesList");
+        if (!container) return;
+
+        const schedules = getSchedules();
+        if (schedules.length === 0) {
+            container.innerHTML = `
+                <div class="empty-schedules" style="grid-column: 1 / -1;">
+                    <div class="empty-schedules-icon">🗓️</div>
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">No Schedules Set</div>
+                    <div style="font-size: 13px;">Create automated weekly schedules to turn Classroom lights ON & OFF automatically.</div>
+                    <button class="btn-primary-sm" style="margin-top: 15px;" onclick="openScheduleModal()">+ Create First Schedule</button>
+                </div>
+            `;
+            return;
+        }
+
+        const now = new Date();
+        const currentDay = now.getDay() === 0 ? 7 : now.getDay();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+        container.innerHTML = schedules.map(sched => {
+            const [sH, sM] = sched.startTime.split(":").map(Number);
+            const startMins = sH * 60 + sM;
+            const endMins = startMins + sched.durationMinutes;
+
+            const isToday = sched.days.includes(currentDay);
+            let isActiveNow = false;
+            if (sched.enabled && isToday) {
+                if (endMins <= 1440) {
+                    isActiveNow = (currentMinutes >= startMins && currentMinutes < endMins);
+                } else {
+                    isActiveNow = (currentMinutes >= startMins || currentMinutes < (endMins % 1440));
+                }
+            }
+
+            const daysChipsHTML = [1, 2, 3, 4, 5, 6, 7].map(d => {
+                const activeClass = sched.days.includes(d) ? 'active' : '';
+                return `<div class="day-chip ${activeClass}">${DAY_NAMES[d - 1]}</div>`;
+            }).join('');
+
+            const statusBadgeHTML = !sched.enabled
+                ? `<span class="schedule-status-badge off">⚪ Disabled</span>`
+                : isActiveNow
+                ? `<span class="schedule-status-badge active">🟢 Active Now (ON)</span>`
+                : `<span class="schedule-status-badge upcoming">⏳ Scheduled</span>`;
+
+            return `
+                <div class="schedule-card ${!sched.enabled ? 'disabled' : ''}">
+                    <div class="schedule-card-header">
+                        <div class="schedule-device-info">
+                            <div class="schedule-icon">💡</div>
+                            <div>
+                                <div class="schedule-title">${sched.label}</div>
+                                <div class="schedule-subtitle">${sched.deviceName}</div>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" ${sched.enabled ? 'checked' : ''} onchange="toggleSchedule('${sched.id}')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="schedule-time-box">
+                        <div>
+                            <div style="font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase;">Time Slot</div>
+                            <div class="schedule-time-range">${formatTime24to12(sched.startTime)} – ${minutesToFormattedTime(endMins)}</div>
+                        </div>
+                        <div class="schedule-duration-pill">⏳ ${formatDuration(sched.durationMinutes)}</div>
+                    </div>
+
+                    <div class="schedule-days-container">
+                        ${daysChipsHTML}
+                    </div>
+
+                    <div class="schedule-card-footer">
+                        ${statusBadgeHTML}
+                        <button class="delete-sched-btn" title="Delete Schedule" onclick="deleteSchedule('${sched.id}')">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Checking & Executing Schedules Loop
+    const activeScheduleStates = {};
+
+    function checkSchedules() {
+        const schedules = getSchedules();
+        const now = new Date();
+        const currentDay = now.getDay() === 0 ? 7 : now.getDay();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+        const deviceIntendedStates = { 1: false, 2: false };
+        const deviceActiveScheduleLabels = { 1: "", 2: "" };
+        const deviceNextScheduleTimes = { 1: null, 2: null };
+
+        schedules.forEach(sched => {
+            if (!sched.enabled) return;
+
+            const [sH, sM] = sched.startTime.split(":").map(Number);
+            const startMins = sH * 60 + sM;
+            const endMins = startMins + sched.durationMinutes;
+
+            const isToday = sched.days.includes(currentDay);
+            let inWindow = false;
+
+            if (isToday) {
+                if (endMins <= 1440) {
+                    inWindow = (currentMinutes >= startMins && currentMinutes < endMins);
+                } else {
+                    inWindow = (currentMinutes >= startMins || currentMinutes < (endMins % 1440));
+                }
+            }
+
+            if (inWindow) {
+                deviceIntendedStates[sched.deviceId] = true;
+                deviceActiveScheduleLabels[sched.deviceId] = `${sched.label} (until ${minutesToFormattedTime(endMins)})`;
+            } else if (isToday && currentMinutes < startMins) {
+                if (!deviceNextScheduleTimes[sched.deviceId] || startMins < deviceNextScheduleTimes[sched.deviceId].startMins) {
+                    deviceNextScheduleTimes[sched.deviceId] = {
+                        label: sched.label,
+                        startMins: startMins,
+                        durationMinutes: sched.durationMinutes,
+                        timeStr: formatTime24to12(sched.startTime)
+                    };
+                }
+            }
+        });
+
+        [1, 2].forEach(devId => {
+            const shouldBeOn = deviceIntendedStates[devId];
+            const wasOnBySched = !!activeScheduleStates[devId];
+
+            if (shouldBeOn && !wasOnBySched) {
+                activeScheduleStates[devId] = true;
+                const devName = devId === 1 ? "Classroom 1" : "Classroom 2";
+                client.publish(`smart_home/light${devId}`, "ON");
+                updateLight(devId, "ON");
+                showToast("⏰ Schedule Triggered", `${devName} automatically turned ON according to active schedule`, "💡");
+            } else if (!shouldBeOn && wasOnBySched) {
+                activeScheduleStates[devId] = false;
+                const devName = devId === 1 ? "Classroom 1" : "Classroom 2";
+                client.publish(`smart_home/light${devId}`, "OFF");
+                updateLight(devId, "OFF");
+                showToast("⏰ Schedule Completed", `${devName} automatically turned OFF as schedule ended`, "🌙");
+            }
+        });
+
+        updateDeviceScheduleBadges(deviceIntendedStates, deviceActiveScheduleLabels, deviceNextScheduleTimes);
+    }
+
+    function updateDeviceScheduleBadges(activeStates = {}, activeLabels = {}, nextTimes = {}) {
+        [1, 2].forEach(devId => {
+            const badge = document.getElementById(`light${devId}SchedBadge`);
+            if (!badge) return;
+
+            if (activeStates[devId]) {
+                badge.className = "device-sched-badge active-now";
+                badge.innerHTML = `🟢 Active: ${activeLabels[devId] || 'Schedule Running'}`;
+            } else if (nextTimes[devId]) {
+                badge.className = "device-sched-badge";
+                badge.innerHTML = `⏰ Scheduled today at ${nextTimes[devId].timeStr} (${formatDuration(nextTimes[devId].durationMinutes)})`;
+            } else {
+                badge.className = "device-sched-badge hidden";
+                badge.innerHTML = "";
+            }
+        });
+    }
+
+    // Toast Notification System
+    function showToast(title, message, icon = "ℹ️") {
+        const container = document.getElementById("toastContainer");
+        if (!container) return;
+
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerHTML = `
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-msg">${message}</div>
+            </div>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(10px)";
+            toast.style.transition = "0.3s";
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // Run scheduler check on load and every 3 seconds
+    window.addEventListener("DOMContentLoaded", function () {
+        renderSchedules();
+        updateTimePreview();
+        checkSchedules();
+        setInterval(checkSchedules, 3000);
+    });
 
 </script>
 
