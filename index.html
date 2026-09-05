@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,1767 +10,21 @@
     >
 
     <title>Smart Home Dashboard</title>
+    <meta name="description" content="Smart Home Automation Dashboard — Monitor and control your classroom lighting with scheduled MQTT automation.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- MQTT.js -->
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
-
-    <style>
-
-        /* =====================================================
-           GLOBAL
-           ===================================================== */
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-
-            --bg: #f5f7fb;
-            --card: #ffffff;
-            --surface: rgba(255,255,255,0.8);
-            --surface-strong: rgba(255,255,255,0.96);
-            --surface-soft: #f8fafc;
-
-            --text: #111827;
-            --muted: #6b7280;
-            --heading: #0f172a;
-            --border: #e5e7eb;
-
-            --shadow:
-                0 10px 30px rgba(15, 23, 42, 0.08);
-        }
-
-
-        body {
-
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
-            background:
-                linear-gradient(180deg, #eef4ff 0%, #f8fafc 100%);
-
-            color: var(--text);
-
-            min-height: 100vh;
-
-        }
-
-
-        body.dark-mode {
-            --bg: #0b1220;
-            --card: #101b2d;
-            --surface: rgba(15, 23, 42, 0.8);
-            --surface-strong: rgba(15, 23, 42, 0.95);
-            --surface-soft: #111827;
-            --text: #e5eefb;
-            --muted: #9aa9c3;
-            --heading: #f8fafc;
-            --border: rgba(148, 163, 184, 0.2);
-            --shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
-            background: linear-gradient(180deg, #0b1220 0%, #111827 100%);
-            color: var(--text);
-        }
-
-
-        button,
-        input {
-            font-family: inherit;
-        }
-
-
-        /* =====================================================
-           LOGIN
-           ===================================================== */
-
-        .login-page {
-
-            min-height: 100vh;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            padding: 20px;
-
-            background:
-                radial-gradient(
-                    circle at top left,
-                    rgba(99,102,241,0.18),
-                    transparent 28%
-                ),
-                radial-gradient(
-                    circle at bottom right,
-                    rgba(14,165,233,0.16),
-                    transparent 30%
-                ),
-                linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-
-        }
-
-
-        .login-card {
-
-            width: 100%;
-
-            max-width: 430px;
-
-            background: rgba(255,255,255,0.9);
-
-            border: 1px solid rgba(148,163,184,0.18);
-
-            border-radius: 28px;
-
-            padding: 40px 32px 30px;
-
-            box-shadow:
-                0 24px 60px rgba(15,23,42,0.12);
-
-            backdrop-filter: blur(8px);
-
-            position: relative;
-
-            overflow: hidden;
-
-            animation: loginAppear 0.5s ease;
-
-        }
-
-
-        .login-card::before {
-
-            content: "";
-            position: absolute;
-            inset: 0 auto auto 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, var(--primary), #8b5cf6, #22c55e);
-
-        }
-
-
-        @keyframes loginAppear {
-
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-        }
-
-
-        .login-logo {
-
-            width: 78px;
-
-            height: 78px;
-
-            margin: 0 auto 20px;
-
-            border-radius: 22px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 38px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #0f172a,
-                    var(--primary),
-                    #8b5cf6
-                );
-
-            box-shadow:
-                0 12px 28px rgba(79,70,229,0.28);
-
-        }
-
-
-        .login-title {
-
-            text-align: center;
-
-            font-size: 30px;
-
-            font-weight: 800;
-
-            letter-spacing: -0.7px;
-
-        }
-
-
-        body.dark-mode .login-card {
-            background: rgba(15, 23, 42, 0.9);
-            border-color: rgba(148, 163, 184, 0.18);
-            box-shadow: 0 24px 55px rgba(2, 6, 23, 0.45);
-        }
-
-
-        body.dark-mode .input-group input {
-            background: rgba(15, 23, 42, 0.7);
-            border-color: rgba(148, 163, 184, 0.3);
-            color: var(--text);
-        }
-
-
-        body.dark-mode .input-group input::placeholder {
-            color: var(--muted);
-        }
-
-
-        .login-subtitle {
-
-            text-align: center;
-
-            color: var(--muted);
-
-            margin-top: 8px;
-
-            margin-bottom: 30px;
-
-            font-size: 14px;
-
-        }
-
-
-        .input-group {
-
-            margin-bottom: 18px;
-
-        }
-
-
-        .input-group label {
-
-            display: block;
-
-            font-size: 13px;
-
-            font-weight: 700;
-
-            margin-bottom: 8px;
-
-            color: #374151;
-
-        }
-
-
-        .input-wrapper {
-
-            position: relative;
-
-        }
-
-
-        .input-icon {
-
-            position: absolute;
-
-            left: 14px;
-
-            top: 50%;
-
-            transform: translateY(-50%);
-
-            font-size: 17px;
-
-            opacity: 0.6;
-
-        }
-
-
-        .input-group input {
-
-            width: 100%;
-
-            height: 52px;
-
-            border: 1px solid var(--border);
-
-            border-radius: 14px;
-
-            padding: 0 16px 0 46px;
-
-            font-size: 15px;
-
-            outline: none;
-
-            background: #f8fafc;
-
-            transition: 0.2s ease;
-
-        }
-
-
-        .input-group input:focus {
-
-            border-color: rgba(99,102,241,0.5);
-
-            background: white;
-
-            box-shadow:
-                0 0 0 4px rgba(99,102,241,0.08);
-
-        }
-
-
-        .login-error {
-
-            display: none;
-
-            padding: 11px 14px;
-
-            margin-bottom: 18px;
-
-            border-radius: 10px;
-
-            background: #fef2f2;
-
-            color: #b91c1c;
-
-            font-size: 13px;
-
-            text-align: center;
-
-        }
-
-
-        .login-button {
-
-            width: 100%;
-
-            height: 52px;
-
-            border: none;
-
-            border-radius: 14px;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    var(--primary-dark)
-                );
-
-            font-size: 15px;
-
-            font-weight: 700;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 12px 24px rgba(79,70,229,0.26);
-
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-        }
-
-
-        .demo-credentials {
-            margin-top: 16px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-
-        .login-button:hover {
-
-            transform: translateY(-1px);
-
-            box-shadow:
-                0 15px 28px rgba(79,70,229,0.32);
-
-        }
-
-
-        .login-button:active {
-
-            transform: translateY(0);
-
-        }
-
-
-        .login-footer {
-
-            text-align: center;
-
-            margin-top: 24px;
-
-            font-size: 12px;
-
-            color: #9ca3af;
-
-            letter-spacing: 0.06em;
-
-            text-transform: uppercase;
-
-        }
-
-
-        /* =====================================================
-           DASHBOARD
-           ===================================================== */
-
-        .dashboard {
-
-            display: none;
-
-            min-height: 100vh;
-
-        }
-
-
-        .dashboard.active {
-
-            display: block;
-
-            animation: dashboardAppear 0.4s ease;
-
-        }
-
-
-        @keyframes dashboardAppear {
-
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-
-        }
-
-
-        /* =====================================================
-           HEADER
-           ===================================================== */
-
-        .header {
-
-            height: 76px;
-
-            background: var(--surface);
-
-            border-bottom: 1px solid rgba(148,163,184,0.2);
-
-            backdrop-filter: blur(12px);
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            padding: 0 30px;
-
-            position: sticky;
-
-            top: 0;
-
-            z-index: 10;
-
-        }
-
-
-        .brand {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-        }
-
-
-        .brand-icon {
-
-            width: 42px;
-
-            height: 42px;
-
-            border-radius: 12px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 22px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--primary),
-                    #8b5cf6
-                );
-
-            box-shadow: 0 10px 24px rgba(99,102,241,0.25);
-
-        }
-
-
-        .brand-text h2 {
-
-            font-size: 17px;
-
-            font-weight: 800;
-
-        }
-
-
-        .brand-text span {
-
-            display: block;
-
-            font-size: 11px;
-
-            color: var(--muted);
-
-            margin-top: 2px;
-
-        }
-
-
-        .header-right {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 14px;
-
-        }
-
-
-        .connection {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            padding: 8px 12px;
-
-            border-radius: 20px;
-
-            background: #f0fdf4;
-
-            color: #15803d;
-
-            font-size: 12px;
-
-            font-weight: 600;
-
-            border: 1px solid rgba(34,197,94,0.12);
-
-        }
-
-
-        .connection-dot {
-
-            width: 8px;
-
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: var(--success);
-
-            box-shadow:
-                0 0 0 4px rgba(34,197,94,0.12);
-
-        }
-
-
-        .theme-toggle,
-        .logout {
-
-            border: none;
-
-            background: #f3f4f6;
-
-            color: #374151;
-
-            padding: 9px 14px;
-
-            border-radius: 10px;
-
-            font-size: 12px;
-
-            font-weight: 600;
-
-            cursor: pointer;
-
-            transition: 0.2s;
-
-        }
-
-
-        body.dark-mode .theme-toggle,
-        body.dark-mode .logout {
-            background: rgba(148,163,184,0.12);
-            color: var(--text);
-            border: 1px solid rgba(148,163,184,0.2);
-        }
-
-
-        .theme-toggle:hover,
-        .logout:hover {
-
-            background: #fee2e2;
-
-            color: #b91c1c;
-
-        }
-
-
-        /* =====================================================
-           MAIN
-           ===================================================== */
-
-        .main {
-
-            max-width: 1180px;
-
-            margin: auto;
-
-            padding: 40px 25px 60px;
-
-        }
-
-
-        .welcome {
-
-            margin-bottom: 28px;
-
-        }
-
-
-        .welcome h1 {
-
-            font-size: 34px;
-
-            letter-spacing: -0.8px;
-
-            margin-bottom: 8px;
-
-        }
-
-
-        .welcome p {
-
-            color: var(--muted);
-
-            font-size: 15px;
-
-        }
-
-
-        /* =====================================================
-           STATUS CARD
-           ===================================================== */
-
-        .status-card {
-
-            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,250,252,0.95));
-
-            border: 1px solid var(--border);
-
-            border-radius: 22px;
-
-            padding: 20px 22px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            margin-bottom: 35px;
-
-            box-shadow: var(--shadow);
-
-            position: relative;
-
-            overflow: hidden;
-
-        }
-
-
-        .status-card::after {
-
-            content: "";
-            position: absolute;
-            inset: 0 auto 0 0;
-            width: 5px;
-            background: linear-gradient(180deg, var(--success), #22c55e);
-
-        }
-
-
-        .status-left {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 14px;
-
-        }
-
-
-        .status-icon {
-
-            width: 45px;
-
-            height: 45px;
-
-            border-radius: 13px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            background: #f0fdf4;
-
-            font-size: 21px;
-
-        }
-
-
-        .status-title {
-
-            font-size: 14px;
-
-            font-weight: 700;
-
-        }
-
-
-        .status-description {
-
-            color: var(--muted);
-
-            font-size: 12px;
-
-            margin-top: 3px;
-
-        }
-
-
-        .status-badge {
-
-            padding: 7px 12px;
-
-            border-radius: 20px;
-
-            background: #f0fdf4;
-
-            color: #15803d;
-
-            font-size: 11px;
-
-            font-weight: 700;
-
-        }
-
-
-        /* =====================================================
-           SECTION
-           ===================================================== */
-
-        .section-header {
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .section-title {
-
-            font-size: 16px;
-
-            font-weight: 800;
-
-        }
-
-
-        .section-count {
-
-            color: var(--muted);
-
-            font-size: 12px;
-
-        }
-
-
-        /* =====================================================
-           DEVICES
-           ===================================================== */
-
-        .devices {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-
-            gap: 18px;
-
-        }
-
-
-        .device {
-
-            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
-
-            border: 1px solid var(--border);
-
-            border-radius: 22px;
-
-            padding: 24px;
-
-            box-shadow: var(--shadow);
-
-            transition:
-                transform 0.2s,
-                box-shadow 0.2s,
-                border-color 0.2s;
-
-        }
-
-
-        .device:hover {
-
-            transform: translateY(-3px);
-
-            box-shadow:
-                0 15px 35px rgba(15,23,42,0.10);
-
-        }
-
-
-        .device.on {
-
-            border-color: rgba(34,197,94,0.2);
-
-            box-shadow: 0 18px 33px rgba(34,197,94,0.08);
-
-        }
-
-
-        .device-top {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            margin-bottom: 25px;
-
-        }
-
-
-        .device-icon {
-
-            width: 56px;
-
-            height: 56px;
-
-            border-radius: 18px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 27px;
-
-            background: linear-gradient(135deg, #eef2ff, #f3f4f6);
-
-            transition: 0.3s;
-
-        }
-
-
-        .device.on .device-icon {
-
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-
-            box-shadow:
-                0 0 0 6px rgba(245,158,11,0.08);
-
-        }
-
-
-        .device-status {
-
-            font-size: 11px;
-
-            font-weight: 700;
-
-            color: #9ca3af;
-
-            padding: 5px 9px;
-
-            background: #f3f4f6;
-
-            border-radius: 15px;
-
-        }
-
-
-        .device.on .device-status {
-
-            background: #dcfce7;
-
-            color: #15803d;
-
-        }
-
-
-        .device-name {
-
-            font-size: 18px;
-
-            font-weight: 800;
-
-            margin-bottom: 5px;
-
-        }
-
-
-        .device-description {
-
-            color: var(--muted);
-
-            font-size: 12px;
-
-        }
-
-
-        .device-bottom {
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: space-between;
-
-            margin-top: 25px;
-
-            padding-top: 18px;
-
-            border-top: 1px solid #f0f0f0;
-
-        }
-
-
-        .device-state {
-
-            font-size: 13px;
-
-            color: var(--muted);
-
-        }
-
-
-        .device.on .device-state {
-
-            color: #16a34a;
-
-            font-weight: 700;
-
-        }
-
-
-        /* =====================================================
-           MODERN TOGGLE
-           ===================================================== */
-
-        .switch {
-
-            position: relative;
-
-            width: 58px;
-
-            height: 32px;
-
-            flex-shrink: 0;
-
-        }
-
-
-        .switch input {
-
-            opacity: 0;
-
-            width: 0;
-
-            height: 0;
-
-        }
-
-
-        .slider {
-
-            position: absolute;
-
-            inset: 0;
-
-            cursor: pointer;
-
-            background: #d1d5db;
-
-            border-radius: 50px;
-
-            transition: 0.3s;
-
-        }
-
-
-        .slider::before {
-
-            content: "";
-
-            position: absolute;
-
-            width: 26px;
-
-            height: 26px;
-
-            left: 3px;
-
-            top: 3px;
-
-            background: white;
-
-            border-radius: 50%;
-
-            box-shadow:
-                0 2px 5px rgba(0,0,0,0.15);
-
-            transition: 0.3s;
-
-        }
-
-
-        .switch input:checked + .slider {
-
-            background: var(--success);
-
-        }
-
-
-        .switch input:checked + .slider::before {
-
-            transform: translateX(26px);
-
-        }
-
-
-        /* =====================================================
-           FOOTER
-           ===================================================== */
-
-        .footer {
-
-            text-align: center;
-
-            margin-top: 45px;
-
-            color: #9ca3af;
-
-            font-size: 11px;
-
-        }
-
-
-        /* =====================================================
-           HIDDEN
-           ===================================================== */
-
-        .hidden {
-
-            display: none !important;
-
-        }
-
-
-        /* =====================================================
-           MOBILE
-           ===================================================== */
-
-        @media (max-width: 700px) {
-
-            .header {
-
-                padding: 0 16px;
-
-                height: 68px;
-
-            }
-
-
-            .brand-text span {
-
-                display: none;
-
-            }
-
-
-            .connection {
-
-                padding: 7px 9px;
-
-            }
-
-
-            .connection-text {
-
-                display: none;
-
-            }
-
-
-            .logout {
-
-                padding: 8px 10px;
-
-            }
-
-
-            .main {
-
-                padding:
-                    28px 16px 45px;
-
-            }
-
-
-            .welcome h1 {
-
-                font-size: 25px;
-
-            }
-
-
-            .overview-grid {
-
-                grid-template-columns: 1fr;
-
-            }
-
-
-            .status-card {
-
-                padding: 16px;
-
-            }
-
-
-            .devices {
-
-                grid-template-columns: 1fr;
-
-            }
-
-
-            .login-card {
-
-                padding: 30px 22px;
-
-                border-radius: 20px;
-
-            }
-
-        }
-
-
-        /* =====================================================
-           SCHEDULES & MODAL STYLES
-           ===================================================== */
-
-        .schedules-section {
-            margin-top: 40px;
-        }
-
-        .device-sched-btn {
-            background: rgba(99, 102, 241, 0.08);
-            color: var(--primary-dark);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        body.dark-mode .device-sched-btn {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-            border-color: rgba(165, 180, 252, 0.3);
-        }
-
-        .device-sched-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .device-sched-badge {
-            margin-top: 12px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-size: 11px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        body.dark-mode .device-sched-badge {
-            background: rgba(30, 58, 138, 0.4);
-            color: #93c5fd;
-            border-color: rgba(147, 197, 253, 0.2);
-        }
-
-        .device-sched-badge.active-now {
-            background: #f0fdf4;
-            color: #15803d;
-            border-color: rgba(34, 197, 94, 0.3);
-        }
-
-        body.dark-mode .device-sched-badge.active-now {
-            background: rgba(20, 83, 45, 0.4);
-            color: #86efac;
-            border-color: rgba(134, 239, 172, 0.3);
-        }
-
-        .btn-primary-sm {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 9px 16px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary-sm:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
-        }
-
-        .schedules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 18px;
-        }
-
-        .schedule-card {
-            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            position: relative;
-            transition: 0.2s ease;
-        }
-
-        body.dark-mode .schedule-card {
-            background: rgba(16, 27, 45, 0.95);
-        }
-
-        .schedule-card.disabled {
-            opacity: 0.65;
-            filter: grayscale(0.2);
-        }
-
-        .schedule-card-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .schedule-device-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .schedule-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: #eef2ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        body.dark-mode .schedule-icon {
-            background: rgba(99, 102, 241, 0.18);
-        }
-
-        .schedule-title {
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .schedule-subtitle {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .schedule-time-box {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 12px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        body.dark-mode .schedule-time-box {
-            background: rgba(15, 23, 42, 0.6);
-        }
-
-        .schedule-time-range {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--heading);
-        }
-
-        .schedule-duration-pill {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 9px;
-            border-radius: 20px;
-            background: #e0e7ff;
-            color: #3730a3;
-        }
-
-        body.dark-mode .schedule-duration-pill {
-            background: rgba(99, 102, 241, 0.3);
-            color: #c7d2fe;
-        }
-
-        .schedule-days-container {
-            display: flex;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        .day-chip {
-            flex: 1;
-            text-align: center;
-            padding: 5px 2px;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 8px;
-            background: var(--surface-soft);
-            color: var(--muted);
-            border: 1px solid var(--border);
-        }
-
-        .day-chip.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .schedule-card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border);
-        }
-
-        .schedule-status-badge {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .schedule-status-badge.active {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .schedule-status-badge.upcoming {
-            background: #fef3c7;
-            color: #b45309;
-        }
-
-        .schedule-status-badge.off {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-
-        body.dark-mode .schedule-status-badge.off {
-            background: rgba(148, 163, 184, 0.15);
-            color: #94a3b8;
-        }
-
-        .delete-sched-btn {
-            background: transparent;
-            border: none;
-            color: #ef4444;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .delete-sched-btn:hover {
-            background: #fee2e2;
-        }
-
-        body.dark-mode .delete-sched-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
-        }
-
-        .empty-schedules {
-            text-align: center;
-            padding: 40px 20px;
-            background: var(--card);
-            border: 2px dashed var(--border);
-            border-radius: 20px;
-            color: var(--muted);
-        }
-
-        .empty-schedules-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(6px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.25s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            max-width: 520px;
-            width: 100%;
-            padding: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            transform: translateY(20px);
-            transition: 0.25s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active .modal-card {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .modal-close {
-            background: var(--surface-soft);
-            border: none;
-            font-size: 18px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: var(--muted);
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .form-control {
-            width: 100%;
-            height: 46px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 0 14px;
-            font-size: 14px;
-            outline: none;
-            background: var(--surface-soft);
-            color: var(--text);
-            transition: 0.2s;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-
-        .day-select-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            margin-bottom: 10px;
-        }
-
-        .day-btn {
-            padding: 10px 0;
-            border: 1px solid var(--border);
-            background: var(--surface-soft);
-            color: var(--text);
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .day-btn.selected {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .presets-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .preset-btn {
-            padding: 6px 12px;
-            border: 1px solid var(--border);
-            background: var(--surface-soft);
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--muted);
-            transition: 0.2s;
-        }
-
-        .preset-btn:hover {
-            color: var(--primary-dark);
-            border-color: var(--primary);
-        }
-
-        .duration-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .duration-presets {
-            display: flex;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .time-preview-card {
-            background: #eff6ff;
-            border: 1px dashed #93c5fd;
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 13px;
-            color: #1e40af;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        body.dark-mode .time-preview-card {
-            background: rgba(30, 58, 138, 0.3);
-            border-color: rgba(147, 197, 253, 0.3);
-            color: #bfdbfe;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .btn-secondary {
-            background: var(--surface-soft);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 10px 18px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* TOAST NOTIFICATIONS */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .toast {
-            pointer-events: auto;
-            background: var(--card);
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-radius: 14px;
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 280px;
-            max-width: 380px;
-            animation: toastIn 0.3s ease;
-        }
-
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .toast-icon {
-            font-size: 22px;
-        }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-title {
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .toast-msg {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        @media (max-width: 700px) {
-
-
-        @media (max-width: 380px) {
-
-            .brand-text {
-
-                display: none;
-
-            }
-
-            .status-description {
-
-                font-size: 11px;
-
-            }
-
-        }
-
-    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
 
 </head>
 
@@ -1788,19 +41,16 @@
     <div class="login-card">
 
         <div class="login-logo">
-            🏠
+            <i data-lucide="home" stroke-width="2"></i>
         </div>
-
 
         <div class="login-title">
             School Automation
         </div>
 
-
         <div class="login-subtitle">
             Sign in to access campus controls
         </div>
-
 
         <div
             id="loginError"
@@ -1809,21 +59,16 @@
             Invalid username or password
         </div>
 
-
         <form onsubmit="login(event)">
 
             <div class="input-group">
-
                 <label for="username">
                     Username
                 </label>
-
                 <div class="input-wrapper">
-
                     <span class="input-icon">
-                        👤
+                        <i data-lucide="user" stroke-width="2"></i>
                     </span>
-
                     <input
                         type="text"
                         id="username"
@@ -1831,24 +76,17 @@
                         autocomplete="username"
                         required
                     >
-
                 </div>
-
             </div>
 
-
             <div class="input-group">
-
                 <label for="password">
                     Password
                 </label>
-
                 <div class="input-wrapper">
-
                     <span class="input-icon">
-                        🔒
+                        <i data-lucide="lock" stroke-width="2"></i>
                     </span>
-
                     <input
                         type="password"
                         id="password"
@@ -1856,11 +94,8 @@
                         autocomplete="current-password"
                         required
                     >
-
                 </div>
-
             </div>
-
 
             <button
                 type="submit"
@@ -1872,9 +107,8 @@
         </form>
 
         <div class="demo-credentials">
-            Demo: default / default
+            Demo credentials: <strong>default</strong> / <strong>default</strong>
         </div>
-
 
         <div class="login-footer">
             School Automation Control System
@@ -1900,19 +134,12 @@
         <div class="brand">
 
             <div class="brand-icon">
-                🏠
+                <i data-lucide="home" stroke-width="2.5"></i>
             </div>
 
             <div class="brand-text">
-
-                <h2>
-                    School Automation
-                </h2>
-
-                <span>
-                    Campus Control System
-                </span>
-
+                <h2>School Automation</h2>
+                <span>Campus Control System</span>
             </div>
 
         </div>
@@ -1924,36 +151,34 @@
                 id="connection"
                 class="connection"
             >
-
                 <span
                     id="connectionDot"
                     class="connection-dot"
                 ></span>
-
                 <span
                     id="connectionText"
                     class="connection-text"
                 >
                     Connected
                 </span>
-
             </div>
-
 
             <button
                 id="themeToggle"
-                class="theme-toggle"
+                class="header-btn"
                 type="button"
                 aria-label="Toggle dark mode"
             >
-                🌙 Dark
+                <i data-lucide="moon" stroke-width="2"></i>
+                <span>Dark</span>
             </button>
 
             <button
-                class="logout"
+                class="header-btn logout-btn"
                 onclick="logout()"
             >
-                Logout
+                <i data-lucide="log-out" stroke-width="2"></i>
+                <span>Logout</span>
             </button>
 
         </div>
@@ -1970,52 +195,51 @@
         <!-- WELCOME -->
 
         <div class="welcome">
-
             <h1>
-                Welcome back 👋
+                Welcome back <span class="wave">👋</span>
             </h1>
-
             <p>
-                Control and monitor your smart devices.
+                Control and monitor your smart devices in real-time.
             </p>
-
         </div>
 
 
 
-        <!-- CONNECTION STATUS -->
+        <!-- OVERVIEW STRIP -->
 
-        <div class="status-card">
+        <div class="overview-strip">
 
-            <div class="status-left">
-
-                <div class="status-icon">
-                    📡
+            <div class="overview-card">
+                <div class="overview-icon mqtt">
+                    <i data-lucide="wifi" stroke-width="2.5"></i>
                 </div>
-
                 <div>
-
-                    <div class="status-title">
-                        MQTT Connection
+                    <div class="overview-label">MQTT Broker</div>
+                    <div class="overview-value" id="overviewMqtt">
+                        Connected
+                        <span id="statusBadge" class="overview-badge online">ONLINE</span>
                     </div>
-
-                    <div
-                        id="statusDescription"
-                        class="status-description"
-                    >
-                        Connected to smart home broker
-                    </div>
-
                 </div>
-
             </div>
 
+            <div class="overview-card">
+                <div class="overview-icon devices">
+                    <i data-lucide="lightbulb" stroke-width="2.5"></i>
+                </div>
+                <div>
+                    <div class="overview-label">Active Devices</div>
+                    <div class="overview-value" id="overviewDevices">2 Lights</div>
+                </div>
+            </div>
 
-            <div
-                id="statusBadge"
-                class="status-badge"
-            >
-                ONLINE
+            <div class="overview-card">
+                <div class="overview-icon schedules">
+                    <i data-lucide="calendar-clock" stroke-width="2.5"></i>
+                </div>
+                <div>
+                    <div class="overview-label">Schedules</div>
+                    <div class="overview-value" id="overviewSchedules">1 Active</div>
+                </div>
             </div>
 
         </div>
@@ -2025,15 +249,13 @@
         <!-- LIGHTS -->
 
         <div class="section-header">
-
             <div class="section-title">
-                Lighting
+                <i data-lucide="zap" stroke-width="2.5"></i>
+                Lighting Controls
             </div>
-
             <div class="section-count">
                 2 Devices
             </div>
-
         </div>
 
 
@@ -2050,12 +272,13 @@
                 <div class="device-top">
 
                     <div class="device-icon">
-                        💡
+                        <i data-lucide="lightbulb" stroke-width="2"></i>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="device-top-actions">
                         <button class="device-sched-btn" onclick="openScheduleModal(1)">
-                            📅 Schedule
+                            <i data-lucide="calendar" stroke-width="2"></i>
+                            Schedule
                         </button>
 
                         <div
@@ -2088,20 +311,17 @@
                         id="light1State"
                         class="device-state"
                     >
+                        <i data-lucide="power" stroke-width="2"></i>
                         Light is currently off
                     </div>
 
-
                     <label class="switch">
-
                         <input
                             type="checkbox"
                             id="light1"
                             onchange="toggleLight(1)"
                         >
-
                         <span class="slider"></span>
-
                     </label>
 
                 </div>
@@ -2120,12 +340,13 @@
                 <div class="device-top">
 
                     <div class="device-icon">
-                        💡
+                        <i data-lucide="lightbulb" stroke-width="2"></i>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="device-top-actions">
                         <button class="device-sched-btn" onclick="openScheduleModal(2)">
-                            📅 Schedule
+                            <i data-lucide="calendar" stroke-width="2"></i>
+                            Schedule
                         </button>
 
                         <div
@@ -2158,20 +379,17 @@
                         id="light2State"
                         class="device-state"
                     >
+                        <i data-lucide="power" stroke-width="2"></i>
                         Light is currently off
                     </div>
 
-
                     <label class="switch">
-
                         <input
                             type="checkbox"
                             id="light2"
                             onchange="toggleLight(2)"
                         >
-
                         <span class="slider"></span>
-
                     </label>
 
                 </div>
@@ -2190,15 +408,17 @@
 
                 <div>
                     <div class="section-title">
-                        ⏰ Automated Schedules
+                        <i data-lucide="clock" stroke-width="2.5"></i>
+                        Automated Schedules
                     </div>
-                    <div style="font-size: 12px; color: var(--muted); margin-top: 2px;">
+                    <div style="font-size: 13px; color: var(--text-tertiary); margin-top: 4px; font-weight: 500;">
                         Automatically turn devices ON during designated weekly time slots
                     </div>
                 </div>
 
                 <button class="btn-primary-sm" onclick="openScheduleModal()">
-                    + Add Schedule
+                    <i data-lucide="plus" stroke-width="2.5"></i>
+                    Add Schedule
                 </button>
 
             </div>
@@ -2211,7 +431,7 @@
 
 
         <div class="footer">
-            School Automation • Campus • MQTT
+            School Automation <span>•</span> Campus Control <span>•</span> MQTT Protocol
         </div>
 
 
@@ -2229,9 +449,12 @@
 
         <div class="modal-header">
             <div class="modal-title">
-                📅 Schedule Device Automation
+                <i data-lucide="calendar-plus" stroke-width="2"></i>
+                Schedule Automation
             </div>
-            <button class="modal-close" onclick="closeScheduleModal()">✕</button>
+            <button class="modal-close" onclick="closeScheduleModal()">
+                <i data-lucide="x" stroke-width="2"></i>
+            </button>
         </div>
 
         <form id="scheduleForm" onsubmit="saveScheduleForm(event)">
@@ -2269,8 +492,8 @@
                 </div>
 
                 <div class="presets-row">
-                    <button type="button" class="preset-btn" onclick="selectDayPreset('weekdays')">Weekdays (Mon-Fri)</button>
-                    <button type="button" class="preset-btn" onclick="selectDayPreset('weekends')">Weekends (Sat-Sun)</button>
+                    <button type="button" class="preset-btn" onclick="selectDayPreset('weekdays')">Weekdays</button>
+                    <button type="button" class="preset-btn" onclick="selectDayPreset('weekends')">Weekends</button>
                     <button type="button" class="preset-btn" onclick="selectDayPreset('everyday')">Everyday</button>
                 </div>
             </div>
@@ -2291,7 +514,7 @@
                 <label>Turn-ON Duration</label>
                 <div class="duration-inputs">
                     <div>
-                        <span style="font-size: 11px; color: var(--muted);">Hours</span>
+                        <div class="duration-label">Hours</div>
                         <input
                             type="number"
                             id="schedHours"
@@ -2303,7 +526,7 @@
                         >
                     </div>
                     <div>
-                        <span style="font-size: 11px; color: var(--muted);">Minutes</span>
+                        <div class="duration-label">Minutes</div>
                         <input
                             type="number"
                             id="schedMinutes"
@@ -2327,7 +550,7 @@
             </div>
 
             <div id="timePreviewCard" class="time-preview-card">
-                <span>⏱️</span>
+                <i data-lucide="clock" stroke-width="2"></i>
                 <span id="timePreviewText">
                     Light will turn ON at 08:00 AM and automatically turn OFF at 10:00 AM (2 hours)
                 </span>
@@ -2335,7 +558,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeScheduleModal()">Cancel</button>
-                <button type="submit" class="login-button" style="width: auto; padding: 0 24px;">Save Schedule</button>
+                <button type="submit" class="btn-submit">Save Schedule</button>
             </div>
 
         </form>
@@ -2348,901 +571,12 @@
 <div id="toastContainer" class="toast-container"></div>
 
 
-
-<script>
-
-    const THEME_KEY = "schoolAutomationTheme";
-
-    function applyTheme(theme) {
-        const darkMode = theme === "dark";
-        document.body.classList.toggle("dark-mode", darkMode);
-
-        const button = document.getElementById("themeToggle");
-        if (button) {
-            button.textContent = darkMode ? "☀️ Light" : "🌙 Dark";
-            button.setAttribute("aria-label", darkMode ? "Switch to light mode" : "Switch to dark mode");
-        }
-    }
-
-    function toggleTheme() {
-        const nextTheme = document.body.classList.contains("dark-mode") ? "light" : "dark";
-        localStorage.setItem(THEME_KEY, nextTheme);
-        applyTheme(nextTheme);
-    }
-
-
-    /* =====================================================
-       LOGIN
-       ===================================================== */
-
-    const VALID_CREDENTIALS = [
-        ["default", "default"],
-        ["admin", "admin"]
-    ];
-
-    function login(event) {
-
-        event.preventDefault();
-
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
-
-        const normalizedUsername = username.toLowerCase();
-        const normalizedPassword = password.toLowerCase();
-
-        const isValidLogin = VALID_CREDENTIALS.some(
-            ([validUsername, validPassword]) =>
-                normalizedUsername === validUsername.toLowerCase() &&
-                normalizedPassword === validPassword.toLowerCase()
-        );
-
-        if (isValidLogin) {
-            sessionStorage.setItem("smartHomeLoggedIn", "true");
-            document.getElementById("loginError").style.display = "none";
-            showDashboard();
-        } else {
-            document.getElementById("loginError").style.display = "block";
-        }
-
-    }
-
-
-
-    /* =====================================================
-       SHOW DASHBOARD
-       ===================================================== */
-
-    function showDashboard() {
-
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("dashboard").classList.add("active");
-
-    }
-
-
-
-    /* =====================================================
-       LOGOUT
-       ===================================================== */
-
-    function logout() {
-
-        sessionStorage.removeItem("smartHomeLoggedIn");
-
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
-
-        document.getElementById("dashboard").classList.remove("active");
-        document.getElementById("loginPage").classList.remove("hidden");
-        document.getElementById("loginError").style.display = "none";
-
-    }
-
-
-
-    /* =====================================================
-       CHECK LOGIN
-       ===================================================== */
-
-    window.addEventListener("DOMContentLoaded", function () {
-
-        const savedTheme = localStorage.getItem(THEME_KEY) || "light";
-        applyTheme(savedTheme);
-
-        const themeButton = document.getElementById("themeToggle");
-        if (themeButton) {
-            themeButton.addEventListener("click", toggleTheme);
-        }
-
-        const loggedIn = sessionStorage.getItem("smartHomeLoggedIn");
-        if (loggedIn === "true") {
-            showDashboard();
-        } else {
-            document.getElementById("dashboard").classList.remove("active");
-            document.getElementById("loginPage").classList.remove("hidden");
-        }
-
-    });
-
-
-
-    /* =====================================================
-       MQTT
-       ===================================================== */
-
-    const broker =
-        "wss://broker.hivemq.com:8884/mqtt";
-
-
-    const client =
-        mqtt.connect(
-            broker,
-            {
-
-                clientId:
-                    "SmartHomeWeb-" +
-                    Math.random()
-                        .toString(16)
-                        .substring(2),
-
-                clean: true,
-
-                connectTimeout: 5000,
-
-                reconnectPeriod: 2000
-
-            }
-        );
-
-
-
-    /* =====================================================
-       MQTT CONNECTED
-       ===================================================== */
-
-    client.on(
-        "connect",
-        function () {
-
-            console.log(
-                "MQTT connected"
-            );
-
-
-            updateConnection(
-                true
-            );
-
-
-            client.subscribe(
-                "smart_home/light1/state"
-            );
-
-
-            client.subscribe(
-                "smart_home/light2/state"
-            );
-
-        }
-    );
-
-
-
-    /* =====================================================
-       MQTT ERROR
-       ===================================================== */
-
-    client.on(
-        "error",
-        function (error) {
-
-            console.log(
-                "MQTT Error:",
-                error
-            );
-
-
-            updateConnection(
-                false,
-                "Connection error"
-            );
-
-        }
-    );
-
-
-
-    /* =====================================================
-       MQTT OFFLINE
-       ===================================================== */
-
-    client.on(
-        "offline",
-        function () {
-
-            updateConnection(
-                false,
-                "Reconnecting..."
-            );
-
-        }
-    );
-
-
-
-    /* =====================================================
-       CONNECTION UI
-       ===================================================== */
-
-    function updateConnection(
-        connected,
-        message = ""
-    ) {
-
-        const connection =
-            document.getElementById(
-                "connection"
-            );
-
-
-        const dot =
-            document.getElementById(
-                "connectionDot"
-            );
-
-
-        const text =
-            document.getElementById(
-                "connectionText"
-            );
-
-
-        const badge =
-            document.getElementById(
-                "statusBadge"
-            );
-
-
-        const description =
-            document.getElementById(
-                "statusDescription"
-            );
-
-
-        if (connected) {
-
-            connection.style.background =
-                "#f0fdf4";
-
-            connection.style.color =
-                "#15803d";
-
-            dot.style.background =
-                "#22c55e";
-
-            text.innerText =
-                "Connected";
-
-            badge.innerText =
-                "ONLINE";
-
-            badge.style.background =
-                "#dcfce7";
-
-            badge.style.color =
-                "#15803d";
-
-            description.innerText =
-                "Connected to smart home broker";
-
-        } else {
-
-            connection.style.background =
-                "#fff7ed";
-
-            connection.style.color =
-                "#c2410c";
-
-            dot.style.background =
-                "#f59e0b";
-
-            text.innerText =
-                "Reconnecting";
-
-            badge.innerText =
-                "OFFLINE";
-
-            badge.style.background =
-                "#ffedd5";
-
-            badge.style.color =
-                "#c2410c";
-
-            description.innerText =
-                message || "MQTT connection unavailable";
-
-        }
-
-    }
-
-
-
-    /* =====================================================
-       RECEIVE MQTT MESSAGE
-       ===================================================== */
-
-    client.on(
-        "message",
-        function (topic, message) {
-
-            const value =
-                message
-                    .toString()
-                    .trim()
-                    .toUpperCase();
-
-
-            console.log(
-                topic,
-                value
-            );
-
-
-            if (
-                topic ===
-                "smart_home/light1/state"
-            ) {
-
-                updateLight(
-                    1,
-                    value
-                );
-
-            }
-
-
-            if (
-                topic ===
-                "smart_home/light2/state"
-            ) {
-
-                updateLight(
-                    2,
-                    value
-                );
-
-            }
-
-        }
-    );
-
-
-
-    /* =====================================================
-       TOGGLE LIGHT
-       ===================================================== */
-
-    function toggleLight(
-        lightNumber
-    ) {
-
-        const checkbox =
-            document.getElementById(
-                "light" +
-                lightNumber
-            );
-
-
-        const state =
-            checkbox.checked
-                ? "ON"
-                : "OFF";
-
-
-        const topic =
-            "smart_home/light" +
-            lightNumber;
-
-
-        client.publish(
-            topic,
-            state
-        );
-
-
-        console.log(
-            "Published:",
-            topic,
-            state
-        );
-
-    }
-
-
-
-    /* =====================================================
-       UPDATE LIGHT UI
-       ===================================================== */
-
-    function updateLight(
-        lightNumber,
-        state
-    ) {
-
-        const checkbox =
-            document.getElementById(
-                "light" +
-                lightNumber
-            );
-
-
-        const device =
-            document.getElementById(
-                "device" +
-                lightNumber
-            );
-
-
-        const status =
-            document.getElementById(
-                "light" +
-                lightNumber +
-                "Status"
-            );
-
-
-        const stateText =
-            document.getElementById(
-                "light" +
-                lightNumber +
-                "State"
-            );
-
-
-        if (state === "ON") {
-
-            checkbox.checked = true;
-
-            device.classList.add(
-                "on"
-            );
-
-            status.innerText =
-                "ON";
-
-            stateText.innerText =
-                "Light is currently on";
-
-        } else {
-
-            checkbox.checked = false;
-
-            device.classList.remove(
-                "on"
-            );
-
-            status.innerText =
-                "OFF";
-
-            stateText.innerText =
-                "Light is currently off";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       AUTOMATED SCHEDULER ENGINE
-       ===================================================== */
-
-    const SCHEDULE_STORAGE_KEY = "smartHomeSchedules";
-    let selectedDaysSet = new Set([1, 2, 3, 4, 5]);
-
-    // Initial schedules setup
-    function getSchedules() {
-        try {
-            const raw = localStorage.getItem(SCHEDULE_STORAGE_KEY);
-            if (!raw) {
-                const defaultSchedules = [
-                    {
-                        id: "sched_default_1",
-                        deviceId: 1,
-                        deviceName: "Classroom 1",
-                        label: "Classroom 1 Morning Schedule",
-                        days: [1, 2, 3, 4, 5],
-                        startTime: "08:00",
-                        durationMinutes: 120,
-                        enabled: true
-                    }
-                ];
-                localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(defaultSchedules));
-                return defaultSchedules;
-            }
-            return JSON.parse(raw);
-        } catch (e) {
-            console.error("Failed to load schedules", e);
-            return [];
-        }
-    }
-
-    function saveSchedules(schedules) {
-        localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(schedules));
-        renderSchedules();
-    }
-
-    const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-    function formatTime24to12(timeStr) {
-        if (!timeStr) return "";
-        const [h, m] = timeStr.split(":").map(Number);
-        const period = h >= 12 ? "PM" : "AM";
-        const h12 = h % 12 === 0 ? 12 : h % 12;
-        return `${String(h12).padStart(2, "0")}:${String(m).padStart(2, "0")} ${period}`;
-    }
-
-    function minutesToFormattedTime(totalMinutes) {
-        const normalized = (totalMinutes % 1440 + 1440) % 1440;
-        const h = Math.floor(normalized / 60);
-        const m = normalized % 60;
-        const period = h >= 12 ? "PM" : "AM";
-        const h12 = h % 12 === 0 ? 12 : h % 12;
-        return `${String(h12).padStart(2, "0")}:${String(m).padStart(2, "0")} ${period}`;
-    }
-
-    function formatDuration(minutes) {
-        const h = Math.floor(minutes / 60);
-        const m = minutes % 60;
-        if (h > 0 && m > 0) return `${h} hr ${m} mins`;
-        if (h > 0) return `${h} ${h === 1 ? 'hr' : 'hrs'}`;
-        return `${m} mins`;
-    }
-
-    // Modal Control Functions
-    function openScheduleModal(deviceId = null) {
-        const modal = document.getElementById("scheduleModal");
-        if (deviceId) {
-            document.getElementById("schedDevice").value = String(deviceId);
-        }
-        document.getElementById("schedLabel").value = deviceId === 2 ? "Classroom 2 Class Schedule" : "Classroom 1 Class Schedule";
-        selectedDaysSet = new Set([1, 2, 3, 4, 5]);
-        updateDayButtons();
-        document.getElementById("schedStartTime").value = "08:00";
-        document.getElementById("schedHours").value = 2;
-        document.getElementById("schedMinutes").value = 0;
-        updateTimePreview();
-        modal.classList.add("active");
-    }
-
-    function closeScheduleModal() {
-        document.getElementById("scheduleModal").classList.remove("active");
-    }
-
-    function handleModalOverlayClick(event) {
-        if (event.target.id === "scheduleModal") {
-            closeScheduleModal();
-        }
-    }
-
-    function toggleDayBtn(dayNumber) {
-        if (selectedDaysSet.has(dayNumber)) {
-            if (selectedDaysSet.size > 1) {
-                selectedDaysSet.delete(dayNumber);
-            }
-        } else {
-            selectedDaysSet.add(dayNumber);
-        }
-        updateDayButtons();
-    }
-
-    function updateDayButtons() {
-        document.querySelectorAll(".day-btn").forEach(btn => {
-            const dayNum = Number(btn.getAttribute("data-day"));
-            if (selectedDaysSet.has(dayNum)) {
-                btn.classList.add("selected");
-            } else {
-                btn.classList.remove("selected");
-            }
-        });
-    }
-
-    function selectDayPreset(preset) {
-        if (preset === 'weekdays') selectedDaysSet = new Set([1, 2, 3, 4, 5]);
-        else if (preset === 'weekends') selectedDaysSet = new Set([6, 7]);
-        else if (preset === 'everyday') selectedDaysSet = new Set([1, 2, 3, 4, 5, 6, 7]);
-        updateDayButtons();
-    }
-
-    function setDurationPreset(hours, minutes) {
-        document.getElementById("schedHours").value = hours;
-        document.getElementById("schedMinutes").value = minutes;
-        updateTimePreview();
-    }
-
-    function updateTimePreview() {
-        const startTimeStr = document.getElementById("schedStartTime").value || "08:00";
-        const hours = parseInt(document.getElementById("schedHours").value) || 0;
-        const minutes = parseInt(document.getElementById("schedMinutes").value) || 0;
-        const totalDuration = hours * 60 + minutes;
-
-        const [startH, startM] = startTimeStr.split(":").map(Number);
-        const startTotalMins = startH * 60 + startM;
-        const endTotalMins = startTotalMins + totalDuration;
-
-        const startFormatted = formatTime24to12(startTimeStr);
-        const endFormatted = minutesToFormattedTime(endTotalMins);
-        const durationFormatted = formatDuration(totalDuration);
-
-        const previewText = `Light will automatically turn <strong>ON</strong> at <strong>${startFormatted}</strong> and turn <strong>OFF</strong> at <strong>${endFormatted}</strong> (Duration: ${durationFormatted})`;
-        document.getElementById("timePreviewText").innerHTML = previewText;
-    }
-
-    function saveScheduleForm(event) {
-        event.preventDefault();
-        const deviceId = parseInt(document.getElementById("schedDevice").value);
-        const label = document.getElementById("schedLabel").value.trim() || `Classroom ${deviceId} Schedule`;
-        const startTime = document.getElementById("schedStartTime").value;
-        const hours = parseInt(document.getElementById("schedHours").value) || 0;
-        const minutes = parseInt(document.getElementById("schedMinutes").value) || 0;
-        const durationMinutes = hours * 60 + minutes;
-
-        if (durationMinutes <= 0) {
-            alert("Please set a duration greater than 0 minutes.");
-            return;
-        }
-
-        const daysArray = Array.from(selectedDaysSet).sort((a, b) => a - b);
-        const deviceName = deviceId === 1 ? "Classroom 1" : "Classroom 2";
-
-        const newSched = {
-            id: "sched_" + Date.now(),
-            deviceId: deviceId,
-            deviceName: deviceName,
-            label: label,
-            days: daysArray,
-            startTime: startTime,
-            durationMinutes: durationMinutes,
-            enabled: true
-        };
-
-        const schedules = getSchedules();
-        schedules.push(newSched);
-        saveSchedules(schedules);
-
-        closeScheduleModal();
-        showToast("📅 Schedule Saved", `${label} for ${deviceName} added successfully`, "✅");
-        checkSchedules();
-    }
-
-    function toggleSchedule(id) {
-        const schedules = getSchedules();
-        const sched = schedules.find(s => s.id === id);
-        if (sched) {
-            sched.enabled = !sched.enabled;
-            saveSchedules(schedules);
-            showToast(sched.enabled ? "Schedule Enabled" : "Schedule Disabled", `Schedule "${sched.label}" is now ${sched.enabled ? 'active' : 'paused'}`, "⏱️");
-            checkSchedules();
-        }
-    }
-
-    function deleteSchedule(id) {
-        if (!confirm("Are you sure you want to delete this schedule?")) return;
-        let schedules = getSchedules();
-        const sched = schedules.find(s => s.id === id);
-        schedules = schedules.filter(s => s.id !== id);
-        saveSchedules(schedules);
-        if (sched) {
-            showToast("Schedule Deleted", `Removed "${sched.label}"`, "🗑️");
-        }
-        checkSchedules();
-    }
-
-    function renderSchedules() {
-        const container = document.getElementById("schedulesList");
-        if (!container) return;
-
-        const schedules = getSchedules();
-        if (schedules.length === 0) {
-            container.innerHTML = `
-                <div class="empty-schedules" style="grid-column: 1 / -1;">
-                    <div class="empty-schedules-icon">🗓️</div>
-                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">No Schedules Set</div>
-                    <div style="font-size: 13px;">Create automated weekly schedules to turn Classroom lights ON & OFF automatically.</div>
-                    <button class="btn-primary-sm" style="margin-top: 15px;" onclick="openScheduleModal()">+ Create First Schedule</button>
-                </div>
-            `;
-            return;
-        }
-
-        const now = new Date();
-        const currentDay = now.getDay() === 0 ? 7 : now.getDay();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        container.innerHTML = schedules.map(sched => {
-            const [sH, sM] = sched.startTime.split(":").map(Number);
-            const startMins = sH * 60 + sM;
-            const endMins = startMins + sched.durationMinutes;
-
-            const isToday = sched.days.includes(currentDay);
-            let isActiveNow = false;
-            if (sched.enabled && isToday) {
-                if (endMins <= 1440) {
-                    isActiveNow = (currentMinutes >= startMins && currentMinutes < endMins);
-                } else {
-                    isActiveNow = (currentMinutes >= startMins || currentMinutes < (endMins % 1440));
-                }
-            }
-
-            const daysChipsHTML = [1, 2, 3, 4, 5, 6, 7].map(d => {
-                const activeClass = sched.days.includes(d) ? 'active' : '';
-                return `<div class="day-chip ${activeClass}">${DAY_NAMES[d - 1]}</div>`;
-            }).join('');
-
-            const statusBadgeHTML = !sched.enabled
-                ? `<span class="schedule-status-badge off">⚪ Disabled</span>`
-                : isActiveNow
-                ? `<span class="schedule-status-badge active">🟢 Active Now (ON)</span>`
-                : `<span class="schedule-status-badge upcoming">⏳ Scheduled</span>`;
-
-            return `
-                <div class="schedule-card ${!sched.enabled ? 'disabled' : ''}">
-                    <div class="schedule-card-header">
-                        <div class="schedule-device-info">
-                            <div class="schedule-icon">💡</div>
-                            <div>
-                                <div class="schedule-title">${sched.label}</div>
-                                <div class="schedule-subtitle">${sched.deviceName}</div>
-                            </div>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" ${sched.enabled ? 'checked' : ''} onchange="toggleSchedule('${sched.id}')">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="schedule-time-box">
-                        <div>
-                            <div style="font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase;">Time Slot</div>
-                            <div class="schedule-time-range">${formatTime24to12(sched.startTime)} – ${minutesToFormattedTime(endMins)}</div>
-                        </div>
-                        <div class="schedule-duration-pill">⏳ ${formatDuration(sched.durationMinutes)}</div>
-                    </div>
-
-                    <div class="schedule-days-container">
-                        ${daysChipsHTML}
-                    </div>
-
-                    <div class="schedule-card-footer">
-                        ${statusBadgeHTML}
-                        <button class="delete-sched-btn" title="Delete Schedule" onclick="deleteSchedule('${sched.id}')">🗑️ Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    // Checking & Executing Schedules Loop
-    const activeScheduleStates = {};
-
-    function checkSchedules() {
-        const schedules = getSchedules();
-        const now = new Date();
-        const currentDay = now.getDay() === 0 ? 7 : now.getDay();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        const deviceIntendedStates = { 1: false, 2: false };
-        const deviceActiveScheduleLabels = { 1: "", 2: "" };
-        const deviceNextScheduleTimes = { 1: null, 2: null };
-
-        schedules.forEach(sched => {
-            if (!sched.enabled) return;
-
-            const [sH, sM] = sched.startTime.split(":").map(Number);
-            const startMins = sH * 60 + sM;
-            const endMins = startMins + sched.durationMinutes;
-
-            const isToday = sched.days.includes(currentDay);
-            let inWindow = false;
-
-            if (isToday) {
-                if (endMins <= 1440) {
-                    inWindow = (currentMinutes >= startMins && currentMinutes < endMins);
-                } else {
-                    inWindow = (currentMinutes >= startMins || currentMinutes < (endMins % 1440));
-                }
-            }
-
-            if (inWindow) {
-                deviceIntendedStates[sched.deviceId] = true;
-                deviceActiveScheduleLabels[sched.deviceId] = `${sched.label} (until ${minutesToFormattedTime(endMins)})`;
-            } else if (isToday && currentMinutes < startMins) {
-                if (!deviceNextScheduleTimes[sched.deviceId] || startMins < deviceNextScheduleTimes[sched.deviceId].startMins) {
-                    deviceNextScheduleTimes[sched.deviceId] = {
-                        label: sched.label,
-                        startMins: startMins,
-                        durationMinutes: sched.durationMinutes,
-                        timeStr: formatTime24to12(sched.startTime)
-                    };
-                }
-            }
-        });
-
-        [1, 2].forEach(devId => {
-            const shouldBeOn = deviceIntendedStates[devId];
-            const wasOnBySched = !!activeScheduleStates[devId];
-
-            if (shouldBeOn && !wasOnBySched) {
-                activeScheduleStates[devId] = true;
-                const devName = devId === 1 ? "Classroom 1" : "Classroom 2";
-                client.publish(`smart_home/light${devId}`, "ON");
-                updateLight(devId, "ON");
-                showToast("⏰ Schedule Triggered", `${devName} automatically turned ON according to active schedule`, "💡");
-            } else if (!shouldBeOn && wasOnBySched) {
-                activeScheduleStates[devId] = false;
-                const devName = devId === 1 ? "Classroom 1" : "Classroom 2";
-                client.publish(`smart_home/light${devId}`, "OFF");
-                updateLight(devId, "OFF");
-                showToast("⏰ Schedule Completed", `${devName} automatically turned OFF as schedule ended`, "🌙");
-            }
-        });
-
-        updateDeviceScheduleBadges(deviceIntendedStates, deviceActiveScheduleLabels, deviceNextScheduleTimes);
-    }
-
-    function updateDeviceScheduleBadges(activeStates = {}, activeLabels = {}, nextTimes = {}) {
-        [1, 2].forEach(devId => {
-            const badge = document.getElementById(`light${devId}SchedBadge`);
-            if (!badge) return;
-
-            if (activeStates[devId]) {
-                badge.className = "device-sched-badge active-now";
-                badge.innerHTML = `🟢 Active: ${activeLabels[devId] || 'Schedule Running'}`;
-            } else if (nextTimes[devId]) {
-                badge.className = "device-sched-badge";
-                badge.innerHTML = `⏰ Scheduled today at ${nextTimes[devId].timeStr} (${formatDuration(nextTimes[devId].durationMinutes)})`;
-            } else {
-                badge.className = "device-sched-badge hidden";
-                badge.innerHTML = "";
-            }
-        });
-    }
-
-    // Toast Notification System
-    function showToast(title, message, icon = "ℹ️") {
-        const container = document.getElementById("toastContainer");
-        if (!container) return;
-
-        const toast = document.createElement("div");
-        toast.className = "toast";
-        toast.innerHTML = `
-            <div class="toast-icon">${icon}</div>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-msg">${message}</div>
-            </div>
-        `;
-        container.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform = "translateY(10px)";
-            toast.style.transition = "0.3s";
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
-    }
-
-    // Run scheduler check on load and every 3 seconds
-    window.addEventListener("DOMContentLoaded", function () {
-        renderSchedules();
-        updateTimePreview();
-        checkSchedules();
-        setInterval(checkSchedules, 3000);
-    });
-
-</script>
+<!-- JavaScript Modules -->
+<script src="js/auth.js"></script>
+<script src="js/mqtt.js"></script>
+<script src="js/scheduler.js"></script>
 
 
 </body>
 
 </html>
-```
