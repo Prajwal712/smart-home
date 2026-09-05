@@ -2,7 +2,6 @@
 
 > An IoT-based smart home dashboard for controlling classroom lighting using **ESP32**, **MQTT**, and a modern **web interface**.
 
-Built as an internship project at **IIT Jodhpur** — this system lets you toggle lights in real-time from any browser and set automated weekly schedules that turn devices ON/OFF without manual intervention.
 
 ---
 
